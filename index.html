@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GWS Admin Prep | Exam Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8; /* Google Blue */
+            --bg-color: #f8f9fa;
+            --surface: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --success: #1e8e3e;
+            --error: #d93025;
+            --border: #dadce0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header similar to Google Admin Console */
+        header {
+            width: 100%;
+            background: var(--surface);
+            padding: 15px 24px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span { color: var(--text); }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin-top: 40px;
+            padding: 0 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
+        }
+
+        /* Typography */
+        h1 { font-size: 28px; font-weight: 400; margin: 0 0 16px 0; }
+        h2 { font-size: 22px; font-weight: 400; margin: 0 0 24px 0; }
+        p { line-height: 1.5; color: var(--text-secondary); }
+
+        /* Buttons */
+        .btn-group { margin-top: 32px; display: flex; gap: 16px; }
+        
+        button {
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #1557b0; box-shadow: 0 1px 2px rgba(60,64,67,0.3); }
+
+        .btn-outline { background: white; color: var(--primary); border: 1px solid var(--border); }
+        .btn-outline:hover { background: #f4f8fe; border-color: var(--primary); }
+
+        /* Quiz Options */
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover { background-color: #f1f3f4; }
+        .option-item.selected { border-color: var(--primary); background-color: #e8f0fe; color: var(--primary); font-weight: 500; }
+        
+        .option-item.correct { border-color: var(--success); background-color: #e6f4ea; color: var(--success); font-weight: 700; }
+        .option-item.wrong { border-color: var(--error); background-color: #fce8e6; color: var(--error); }
+
+        /* Progress Bar */
+        .progress-container {
+            height: 4px;
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Feedback Box */
+        .feedback {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f1f3f4;
+            border-left: 4px solid var(--text-secondary);
+            border-radius: 0 4px 4px 0;
+            animation: fadeIn 0.4s;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .badge-exam { background: #fce8e6; color: #c5221f; }
+        .badge-practice { background: #e6f4ea; color: #137333; }
+
+        .hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: 0; } }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="#5f6368"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span>Workspace Admin Prep</span>
+    </div>
+</header>
+
+<div class="container">
+    
+    <div id="home-screen" class="card">
+        <h1>Welcome, Admin.</h1>
+        <p>Prepare for your Google Workspace certification with this simulator. Choose your mode below to begin.</p>
+        
+        <div class="btn-group">
+            <button class="btn-primary" onclick="startQuiz('exam')">Start Exam Simulator</button>
+            <button class="btn-outline" onclick="startQuiz('practice')">Practice Mode</button>
+        </div>
+        <div style="margin-top: 24px; font-size: 13px; color: #5f6368;">
+            <strong>Exam Mode:</strong> 50 Questions • No immediate feedback • Results at end<br>
+            <strong>Practice Mode:</strong> Immediate explanations • Learn as you go
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="card hidden">
+        <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+            <span id="question-count" style="font-size:12px; font-weight:500; color:#5f6368">QUESTION 1 of 5</span>
+            <span id="mode-badge" class="badge">MODE</span>
+        </div>
+
+        <h2 id="question-text">Question Text</h2>
+        
+        <div id="options-list">
+            </div>
+
+        <div id="feedback-area" class="feedback hidden">
+            <div style="font-weight: 500; margin-bottom: 4px;">Explanation</div>
+            <span id="explanation-text"></span>
+        </div>
+
+        <div style="margin-top: 24px; text-align: right;">
+            <button id="next-btn" class="btn-primary hidden" onclick="nextQuestion()">Next</button>
+        </div>
+    </div>
+
+    <div id="results-screen" class="card hidden" style="text-align: center;">
+        <div style="font-size: 48px; font-weight: 300; color: var(--primary);" id="final-score">0%</div>
+        <h2>Assessment Complete</h2>
+        <p id="pass-fail-msg" style="max-width: 400px; margin: 0 auto 24px auto;">Result message</p>
+        <button class="btn-primary" onclick="location.reload()">Return to Home</button>
+    </div>
+
+</div>
+
+<script>
+    // --- DATABASE (ADD YOUR QUESTIONS HERE) ---
+   const questions = [
+        // --- SECTION 1: USER & DIRECTORY MANAGEMENT ---
+        {
+            id: 1,
+            text: "You need to add 50 new users to your Google Workspace account. What is the most efficient way to do this?",
+            options: ["Add them one by one manually", "Upload a CSV file in the Admin Console", "Ask users to sign up themselves", "Use Google Forms"],
+            correctIndex: 1,
+            explanation: "For bulk user creation, the Bulk Upload feature using a CSV file is the standard efficient method."
+        },
+        {
+            id: 2,
+            text: "An employee, John, is leaving the company. You want to ensure his data is preserved but he cannot log in. What should you do?",
+            options: ["Delete the account", "Suspend the account", "Change his password", "Remove his license"],
+            correctIndex: 1,
+            explanation: "Suspending the account prevents login but keeps all data intact (Drive, Emails, etc.). Deleting it removes data."
+        },
+        {
+            id: 3,
+            text: "You have created a new Organizational Unit (OU) for 'Marketing'. You want them to have access to YouTube, but no one else in the company should. How do you configure this?",
+            options: ["Turn on YouTube for the root OU", "Turn on YouTube for the Marketing OU and override the parent setting", "Create a Group for Marketing and turn on YouTube", "It is not possible to restrict YouTube"],
+            correctIndex: 1,
+            explanation: "Organizational Units (OUs) are the primary way to control app availability. You turn it OFF at the root and ON for the specific child OU."
+        },
+        {
+            id: 4,
+            text: "A user changed their last name. You updated their email address to match the new name. What happens to the old email address?",
+            options: ["It is deleted immediately", "It automatically becomes an email alias", "It must be manually added as an alias", "Emails sent to it will bounce"],
+            correctIndex: 1,
+            explanation: "When you rename a user's primary email in the Admin Console, Google automatically adds the old address as an alias so they don't miss mail."
+        },
+        {
+            id: 5,
+            text: "You need to create a group for the 'Support Team' where anyone on the internet can email the group, but only members can view the member list. Which setting do you configure?",
+            options: ["Access Settings", "Member Management", "Directory Visibility", "Spam moderation"],
+            correctIndex: 0,
+            explanation: "Access Settings controls who can contact the group (External/Public) and who can view the membership (Team only)."
+        },
+        {
+            id: 6,
+            text: "A user forgot their password and is locked out. You reset the password. What is the best security practice to perform next?",
+            options: ["Email the new password to their personal email", "Set the 'Ask for a password change at the next sign-in' option", "Tell them the password over the phone and keep it permanent", "Disable 2SV for 24 hours"],
+            correctIndex: 1,
+            explanation: "Forcing a password change on the next sign-in ensures that only the user knows the final password."
+        },
+        {
+            id: 7,
+            text: "Where can you find a list of all mobile devices that have synced with your corporate data?",
+            options: ["Devices > Mobile & endpoints > Devices", "Security > Dashboard", "Reports > Audit > Drive", "Directory > Users"],
+            correctIndex: 0,
+            explanation: "The Devices section in the Admin Console lists all mobile endpoints (Android, iOS) that have accessed corporate data."
+        },
+        {
+            id: 8,
+            text: "You want to assign the 'Help Desk Admin' role to a user. This user should be able to reset passwords but NOT delete users. Is this possible?",
+            options: ["No, all admins have full access", "Yes, by assigning a pre-built System Role", "Yes, but you must create a custom role", "No, only Super Admins can reset passwords"],
+            correctIndex: 1,
+            explanation: "Google Workspace has pre-built System Roles (like Help Desk Admin, User Admin) that grant specific privileges."
+        },
+        {
+            id: 9,
+            text: "A user has deleted an important Google Drive file and emptied their trash. How long does an Admin have to restore this data?",
+            options: ["5 days", "25 days", "30 days", "Unlimited"],
+            correctIndex: 1,
+            explanation: "Admins have a 25-day window to restore permanently deleted data (after the user empties trash). After 25 days, it is gone forever."
+        },
+        {
+            id: 10,
+            text: "You need to verify if a specific email was delivered to a user's inbox or marked as spam. Which tool do you use?",
+            options: ["Gmail Settings", "Email Log Search", "Reports > Aggregate Reports", "Vault"],
+            correctIndex: 1,
+            explanation: "Email Log Search allows admins to trace specific messages by sender, recipient, or subject to see their delivery status."
+        },
+
+        // --- SECTION 2: GMAIL & CALENDAR ---
+        {
+            id: 11,
+            text: "Your company wants to ensure that all outgoing emails have a standard footer with the company address. What feature do you use?",
+            options: ["Compliance rules", "Default Routing", "Append Footer setting in Gmail Advanced Settings", "Signature enforcement"],
+            correctIndex: 2,
+            explanation: "The 'Append Footer' setting in Gmail Advanced Settings allows you to force a footer on all outgoing emails."
+        },
+        {
+            id: 12,
+            text: "Users are complaining they are receiving too much spam. You want to be more aggressive with filtering. What can you configure?",
+            options: ["DKIM", "SPF", "Spam settings > Be more aggressive", "MX Records"],
+            correctIndex: 2,
+            explanation: "In Gmail Safety settings, you can toggle 'Be more aggressive when filtering spam' to catch more potential junk."
+        },
+        {
+            id: 13,
+            text: "You want to create a calendar resource for a 'Projector' that employees can book. Where do you create this?",
+            options: ["Calendar > Settings", "Directory > Buildings and resources", "Apps > G Suite > Calendar", "It must be created as a User"],
+            correctIndex: 1,
+            explanation: "Physical assets like Rooms and Projectors are managed under Directory > Buildings and resources."
+        },
+        {
+            id: 14,
+            text: "To prevent spoofing of your domain, which DNS records should you configure? (Select the best combination)",
+            options: ["MX and CNAME", "SPF, DKIM, and DMARC", "A and AAAA", "TXT and PTR"],
+            correctIndex: 1,
+            explanation: "SPF, DKIM, and DMARC are the 'holy trinity' of email authentication to prevent spoofing and ensure delivery."
+        },
+        {
+            id: 15,
+            text: "External clients need to see if your employees are free or busy, but should not see the details of the meetings. What setting is this?",
+            options: ["Make all calendars public", "External Sharing Options > Only free/busy information", "Share with specific people", "Internal Sharing Options"],
+            correctIndex: 1,
+            explanation: "You can configure global external sharing settings for Calendar to limit visibility to 'Only free/busy information' for outsiders."
+        },
+
+        // --- SECTION 3: DRIVE & DOCS ---
+        {
+            id: 16,
+            text: "You want to prevent the 'Finance' department from sharing files with anyone outside the company. How do you apply this restriction?",
+            options: ["Turn off Drive for Finance", "Change Sharing Settings for the Finance OU to 'OFF' for external sharing", "Email them a policy PDF", "Remove their licenses"],
+            correctIndex: 1,
+            explanation: "Drive sharing settings can be applied per Organizational Unit (OU). You can disable external sharing specifically for the Finance OU."
+        },
+        {
+            id: 17,
+            text: "A user is transferring to a different department. You want to transfer ownership of their Drive documents to their manager. Is this possible?",
+            options: ["No, users must manually share files", "Yes, using the 'Transfer Ownership' tool in Admin Console", "Yes, but only if the user deletes the files first", "No, you must use Google Takeout"],
+            correctIndex: 1,
+            explanation: "Admins can transfer ownership of Drive files from one user to another via Apps > Drive and Docs > Transfer ownership."
+        },
+        {
+            id: 18,
+            text: "What is the purpose of a 'Shared Drive' (formerly Team Drive)?",
+            options: ["Personal storage for users", "Files are owned by the team/organization, not individual users", "It is for external backup only", "It is for storing photos only"],
+            correctIndex: 1,
+            explanation: "In Shared Drives, files belong to the team. If a member leaves, the files stay. In My Drive, files belong to the individual."
+        },
+        {
+            id: 19,
+            text: "You need to ensure that Google Docs are automatically shared with the 'Editors' group whenever a new document is created in a specific folder. What is the best way?",
+            options: ["Shared Drives", "Scripting", "Manual sharing", "Group Aliases"],
+            correctIndex: 0,
+            explanation: "Shared Drives automatically grant access to all members of the drive. If you add a member, they instantly see all content."
+        },
+        {
+            id: 20,
+            text: "A user wants to edit Microsoft Office files directly in Google Drive without converting them. Is this supported?",
+            options: ["No, they must be converted to Google Docs", "Yes, using Office Editing for Docs, Sheets & Slides", "Only if they have an Office 365 license", "Only on mobile devices"],
+            correctIndex: 1,
+            explanation: "Google Workspace supports native editing of Word/Excel/PPT files stored in Drive without converting them."
+        },
+
+        // --- SECTION 4: SECURITY & AUTH ---
+        {
+            id: 21,
+            text: "You want to enforce 2-Step Verification (2SV) for all users. You want to give them 2 weeks to enroll before they are locked out. How?",
+            options: ["Turn on enforcement immediately", "Set 'Enforcement' to 'On' and select a future date", "Email them every day", "There is no grace period option"],
+            correctIndex: 1,
+            explanation: "The 'New user enrollment period' or setting a future enforcement date allows users a grace period to set up 2SV."
+        },
+        {
+            id: 22,
+            text: "A user's phone was stolen. It contained corporate data. You want to wipe ONLY the corporate data, not their personal photos. What is this called?",
+            options: ["Remote Wipe", "Account Wipe / Selective Wipe", "Device Factory Reset", "Block Device"],
+            correctIndex: 1,
+            explanation: "Account Wipe (or Selective Wipe) removes only the G Suite account data. Device Wipe resets the whole phone."
+        },
+        {
+            id: 23,
+            text: "Which report would you check to see if users are using weak passwords?",
+            options: ["Password Alert Report", "Users > Password Strength", "It is not possible to see passwords", "Security > Password health (Insights)"],
+            correctIndex: 3,
+            explanation: "The Security Health page or Password Insights gives admins an overview of password hygiene (length, reuse, etc.)."
+        },
+        {
+            id: 24,
+            text: "You suspect a user account has been compromised. What is the FIRST step you should take?",
+            options: ["Delete the account", "Suspend the account", "Read their emails", "Call the police"],
+            correctIndex: 1,
+            explanation: "Suspending the account immediately stops the attacker from accessing data while you investigate."
+        },
+        {
+            id: 25,
+            text: "Can you prevent users from installing third-party Marketplace apps that access Google Drive data?",
+            options: ["No, users can install anything", "Yes, by using API Controls to whitelist specific apps", "Yes, by disabling the internet", "Only for Gmail, not Drive"],
+            correctIndex: 1,
+            explanation: "API Controls (or App Access Control) allows admins to block all third-party apps unless they are explicitly trusted/whitelisted."
+        },
+
+        // --- SECTION 5: TROUBLESHOOTING & OTHER ---
+        {
+            id: 26,
+            text: "A user gets an error 'We are sorry, but you do not have access to this service' when trying to open Google Sites. What is the cause?",
+            options: ["The internet is down", "Google Sites is turned OFF for their OU", "They are using the wrong browser", "They need a special license"],
+            correctIndex: 1,
+            explanation: "This is the standard error message when an App (Service) is disabled in the Admin Console for that user's Organizational Unit."
+        },
+        {
+            id: 27,
+            text: "Where do you go to view the invoice for your Google Workspace subscription?",
+            options: ["Billing > Accounts", "Reports > Financial", "Directory > Billing", "Security > Payments"],
+            correctIndex: 0,
+            explanation: "Billing > Accounts (or Payment accounts) is where invoices and transaction history are located."
+        },
+        {
+            id: 28,
+            text: "You want to set Chrome as the default browser and force a specific homepage for all company managed computers. Where do you configure this?",
+            options: ["Devices > Chrome > Settings", "Apps > Web", "Security > Browser", "You must do it manually on each PC"],
+            correctIndex: 0,
+            explanation: "Chrome Enterprise settings (Devices > Chrome) allow you to push policies like homepages and extensions to managed browsers."
+        },
+        {
+            id: 29,
+            text: "What is a 'Catch-all' address?",
+            options: ["An address that receives email sent to non-existent users in your domain", "A spam filter", "A group for everyone", "A backup address"],
+            correctIndex: 0,
+            explanation: "A catch-all address routes emails sent to invalid addresses (e.g., typo@yourdomain.com) to a specific mailbox instead of bouncing."
+        },
+        {
+            id: 30,
+            text: "You need to investigate an issue where a user shared a sensitive document with a competitor. Which report is best?",
+            options: ["Drive Audit Log", "Gmail Log Search", "Login Audit Log", "Token Audit Log"],
+            correctIndex: 0,
+            explanation: "Drive Audit Logs show events like 'User created', 'User viewed', 'User shared', and 'User downloaded' for documents."
+        },
+        {
+            id: 31,
+            text: "Which Google Workspace edition allows for 'Data Regions' (choosing where your data is stored geographically)?",
+            options: ["Business Starter", "Business Standard", "Enterprise", "Non-Profit"],
+            correctIndex: 2,
+            explanation: "Data Regions are an advanced compliance feature available primarily in Enterprise editions."
+        },
+        {
+            id: 32,
+            text: "How do you enable 'Offline Mode' for Google Docs for your entire organization?",
+            options: ["Users do it themselves", "Feature Settings in Drive and Docs Admin Console", "It is on by default and cannot be changed", "Install software on PC"],
+            correctIndex: 1,
+            explanation: "Admins must allow offline access in the Admin Console (Apps > Drive and Docs > Features) before users can enable it on their devices."
+        },
+        {
+            id: 33,
+            text: "A user is unable to sync their corporate email to their personal iPhone. You have 'Basic Mobile Management' turned on. What might be the issue?",
+            options: ["They need to install the Google Device Policy profile", "Basic management doesn't support iOS", "Password is wrong", "They need to use the Gmail App, not native Mail"],
+            correctIndex: 0,
+            explanation: "Even with Basic Management, iOS devices often require a configuration profile to sync corporate data securely."
+        },
+        {
+            id: 34,
+            text: "You want to allow users to recover their own accounts if they forget their password. What do you enable?",
+            options: ["Self-service password recovery", "Auto-unlock", "Admin help desk", "Google Vault"],
+            correctIndex: 0,
+            explanation: "Self-service password recovery allows users to reset their password via a recovery phone or email without calling an admin."
+        },
+        {
+            id: 35,
+            text: "What is the maximum number of users you can add to a Group?",
+            options: ["100", "Unlimited", "There are limits depending on the group type (Dynamic vs Static)", "50"],
+            correctIndex: 2,
+            explanation: "While very high, there are limits. Dynamic groups and Static groups have different ceilings, but for general study, 'Unlimited' is incorrect."
+        },
+        {
+            id: 36,
+            text: "You want to delegate email access so an assistant can read a manager's email. Who configures this?",
+            options: ["The Admin must do it", "The Manager (User) must do it in Gmail settings", "It is not possible", "The Assistant requests it"],
+            correctIndex: 1,
+            explanation: "Email delegation is a user-level setting. The Admin enables the *ability* to delegate, but the user performs the delegation in Gmail settings."
+        },
+        {
+            id: 37,
+            text: "Which record does Google use to verify domain ownership during initial setup?",
+            options: ["TXT or CNAME", "MX", "A", "SRV"],
+            correctIndex: 0,
+            explanation: "Google usually asks you to add a unique TXT record (or CNAME) to your DNS to prove you own the domain."
+        },
+        {
+            id: 38,
+            text: "Can you restore a suspended user?",
+            options: ["No, once suspended they are gone", "Yes, manually via the Users list", "Only after 30 days", "Only via support ticket"],
+            correctIndex: 1,
+            explanation: "Admins can easily restore suspended users from the Users list by clicking 'Restore' (unless suspended by Google for abuse)."
+        },
+        {
+            id: 39,
+            text: "What happens to a user's calendar events if you delete their account?",
+            options: ["They remain on the calendar", "They are deleted", "They are transferred to the admin", "They become public"],
+            correctIndex: 1,
+            explanation: "If you delete a user, their events are removed. This is why it's best practice to suspend or transfer data before deleting."
+        },
+        {
+            id: 40,
+            text: "You want to create a custom admin role that can ONLY read reports but touch nothing else. Which privilege do you select?",
+            options: ["Reports > Read", "Super Admin", "Services > Read", "Users > Update"],
+            correctIndex: 0,
+            explanation: "When creating a custom role, you can granularly select 'Reports' privileges to create a 'Auditor' style role."
+        },
+        {
+            id: 41,
+            text: "A user reports their Google Drive storage is full. What is the quickest fix provided the company has pooled storage?",
+            options: ["Buy more storage for that specific user", "Increase the storage limit for their OU", "Tell them to delete files", "Upgrade the whole domain"],
+            correctIndex: 1,
+            explanation: "In editions with pooled storage, admins can set storage limits per OU. Increasing the limit for their OU (or moving them to a high-storage OU) fixes it."
+        },
+        {
+            id: 42,
+            text: "You want to ensure that all Google Meet sessions starts with the microphone muted. Can you enforce this?",
+            options: ["Yes, in Google Meet safety settings", "No, this is user preference", "Only for Education editions", "Yes, via Chrome Policy"],
+            correctIndex: 3,
+            explanation: "While Meet settings control the platform, specific hardware behavior like 'Force Mute on Entry' is often controlled via Chrome Device/Browser policies."
+        },
+        {
+            id: 43,
+            text: "What is the primary function of Google Vault?",
+            options: ["Backing up data to restore later", "eDiscovery and Legal Holds", "Antivirus", "Password management"],
+            correctIndex: 1,
+            explanation: "Vault is for legal governance (retention rules, holds, searching for lawsuits). It is NOT a backup/restore tool."
+        },
+        {
+            id: 44,
+            text: "You need to migrate email from an Exchange Server to Google Workspace. Which tool is native to the Admin Console?",
+            options: ["Data Migration Service", "Google Takeout", "Google Sync", "Drive File Stream"],
+            correctIndex: 0,
+            explanation: "The Data Migration Service (DMS) is built into the Admin console to pull mail, contacts, and calendars from legacy systems."
+        },
+        {
+            id: 45,
+            text: "A user is receiving a 'Delivery Incomplete' error when sending mail. What does this usually mean?",
+            options: ["The email bounced immediately", "The server is retrying, but hasn't succeeded yet (Temporary failure)", "Their account is suspended", "They have no internet"],
+            correctIndex: 1,
+            explanation: "Delivery Incomplete means a temporary error (soft bounce). Google will keep trying for up to roughly 48 hours before giving up."
+        },
+        {
+            id: 46,
+            text: "You want to stop users from creating public Google Docs that anyone on the web can find. Where is this setting?",
+            options: ["Drive > Sharing settings > Link Sharing", "Drive > Storage", "Docs > Fonts", "Security > API"],
+            correctIndex: 0,
+            explanation: "Sharing Settings controls 'Link Sharing'. You can disable 'Anyone with the link' or 'Public on the web' options."
+        },
+        {
+            id: 47,
+            text: "How do you identify which administrator changed a specific setting last Tuesday?",
+            options: ["Admin Log Events", "Login Audit Log", "Email Log Search", "Drive Audit Log"],
+            correctIndex: 0,
+            explanation: "Admin Log Events record every change made in the Admin Console (who, what, when)."
+        },
+        {
+            id: 48,
+            text: "You want to set up a 'no-reply@company.com' address that automatically discards any email sent to it. How?",
+            options: ["Create a user and delete it", "Create a Group with no members", "Create a Group and set access to 'Restricted'", "Routing rule to drop mail"],
+            correctIndex: 3,
+            explanation: "A routing rule (in Gmail settings) to reject or drop email sent to a specific pattern is the cleanest technical way to do this."
+        },
+        {
+            id: 49,
+            text: "Can a user belong to multiple Organizational Units (OUs)?",
+            options: ["Yes", "No", "Only if they are an admin", "Only in Enterprise edition"],
+            correctIndex: 1,
+            explanation: "A user can only exist in ONE Organizational Unit. However, they can be in multiple Groups."
+        },
+        {
+            id: 50,
+            text: "You want to whitelist a specific IP address for email delivery to bypass spam filters. Where do you add it?",
+            options: ["Email Whitelist", "Spam lists", "Compliance settings", "Gateway settings"],
+            correctIndex: 0,
+            explanation: "The Email Whitelist in Gmail settings allows you to enter IP addresses that should bypass spam filtering."
+        }
+    ];
+
+    // --- LOGIC ---
+    let mode = 'practice';
+    let currentIdx = 0;
+    let score = 0;
+
+    function startQuiz(selectedMode) {
+        mode = selectedMode;
+        currentIdx = 0;
+        score = 0;
+        
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        
+        const badge = document.getElementById('mode-badge');
+        badge.innerText = mode === 'exam' ? 'EXAM SIMULATION' : 'PRACTICE MODE';
+        badge.className = `badge ${mode === 'exam' ? 'badge-exam' : 'badge-practice'}`;
+        
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentIdx];
+        
+        // Update UI
+        document.getElementById('question-count').innerText = `QUESTION ${currentIdx + 1} OF ${questions.length}`;
+        document.getElementById('question-text').innerText = q.text;
+        document.getElementById('feedback-area').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+        
+        // Progress Bar
+        const progress = ((currentIdx) / questions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+
+        // Render Options
+        const list = document.getElementById('options-list');
+        list.innerHTML = '';
+        
+        q.options.forEach((opt, idx) => {
+            const div = document.createElement('div');
+            div.className = 'option-item';
+            div.innerText = opt;
+            div.onclick = () => selectAnswer(idx, div);
+            list.appendChild(div);
+        });
+    }
+
+    function selectAnswer(idx, element) {
+        const q = questions[currentIdx];
+        const isCorrect = idx === q.correctIndex;
+        const options = document.querySelectorAll('.option-item');
+
+        // Disable clicks
+        options.forEach(o => o.style.pointerEvents = 'none');
+
+        if (isCorrect) score++;
+
+        if (mode === 'practice') {
+            // Practice Mode: Show Right/Wrong immediately
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+                options[q.correctIndex].classList.add('correct');
+            }
+            document.getElementById('explanation-text').innerText = q.explanation;
+            document.getElementById('feedback-area').classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        } else {
+            // Exam Mode: Just highlight selection and move on
+            element.classList.add('selected');
+            setTimeout(nextQuestion, 400);
+        }
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('results-screen').classList.remove('hidden');
+        
+        const percent = Math.round((score / questions.length) * 100);
+        document.getElementById('final-score').innerText = `${percent}%`;
+        
+        const msg = document.getElementById('pass-fail-msg');
+        if (percent >= 80) {
+            msg.innerHTML = "Great job! You are ready for the real exam.";
+            msg.style.color = "var(--success)";
+        } else {
+            msg.innerHTML = "Keep practicing. Focus on the questions you missed.";
+            msg.style.color = "var(--error)";
+        }
+    }
+</script>
+
+</body>
+</html>
