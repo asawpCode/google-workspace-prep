@@ -206,9 +206,7 @@
 </div>
 
 <script>
-    // ==========================================
-    // DATA: 75 QUESTIONS (Embedded directly)
-    // ==========================================
+
     const questions = [
         // --- 1. DIRECTORY MANAGEMENT ---
         {
@@ -849,6 +847,7 @@
         // If Exam Mode, Shuffle the questions
         if (mode === 'exam') {
             shuffleArray(currentQuestions);
+            currentQuestions = currentQuestions.slice(0, 50); 
         }
 
         // UI Updates
@@ -956,3 +955,4 @@
 
 </body>
 </html>
+
