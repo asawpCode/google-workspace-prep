@@ -1,0 +1,621 @@
+const questions = [
+    // ==========================================
+    // MODULE 1: DIRECTORY MANAGEMENT (IDs 1-15)
+    // ==========================================
+    {
+        id: 1,
+        category: "directory",
+        text: "You are onboarding 50 temporary contractors. They need email addresses but should not have access to Google Drive or Calendar. How do you handle this efficiently?",
+        options: ["Create them manually and turn off apps one by one", "Add them to a 'Contractors' OU and turn off Drive/Calendar for that OU", "Add them to a 'Contractors' Group and use Group-based access", "Give them Cloud Identity Free licenses only"],
+        correctIndex: 1,
+        explanation: "The standard way to restrict app access for a specific set of users is to place them in a distinct Organizational Unit (OU) and turn the services OFF for that OU."
+    },
+    {
+        id: 2,
+        category: "directory",
+        text: "A user, Sarah, has left the company. You want to retain her email data for legal reasons but free up her license for a new hire. What is the most cost-effective method?",
+        options: ["Suspend the user", "Delete the user", "Assign an 'Archived User' (AU) license and remove the full license", "Export data to a CSV and delete the user"],
+        correctIndex: 2,
+        explanation: "Archived User (AU) licenses allow you to retain data in Vault for eDiscovery at a lower cost than a full license. Suspending keeps the full license active."
+    },
+    {
+        id: 3,
+        category: "directory",
+        text: "You are syncing users from an on-premise Active Directory (AD) using Google Cloud Directory Sync (GCDS). You delete a user in AD. What happens in Google Workspace after the next sync?",
+        options: ["The user is deleted immediately", "The user is suspended", "Nothing happens", "It depends on the GCDS configuration rules"],
+        correctIndex: 3,
+        explanation: "GCDS does not delete users by default to prevent accidental data loss. You must explicitly configure the 'Delete/Suspend' rules in the GCDS configuration manager."
+    },
+    {
+        id: 4,
+        category: "directory",
+        text: "You need to create a group for 'All Managers'. This group should be automatically updated whenever a user's job title in the directory changes to include the word 'Manager'. What type of group is this?",
+        options: ["Security Group", "Dynamic Group", "Google Group for Business", "Distribution List"],
+        correctIndex: 1,
+        explanation: "Dynamic Groups use membership queries (like 'Job Title contains Manager') to automatically add or remove members based on their directory attributes."
+    },
+    {
+        id: 5,
+        category: "directory",
+        text: "A user needs to receive email at both 'marketing@company.com' and 'sales@company.com'. They already have 'marketing'. How do you add 'sales'?",
+        options: ["Create a new user account for sales", "Add 'sales' as an email alias to their existing account", "Create a group called sales", "Use a catch-all address"],
+        correctIndex: 1,
+        explanation: "Email aliases allow a user to receive mail at multiple addresses in the same inbox. You do not need a separate account (which costs money)."
+    },
+    {
+        id: 6,
+        category: "directory",
+        text: "You are uploading a CSV file to bulk update user profiles. The upload finishes with errors. Where do you find the details of which lines failed?",
+        options: ["Admin Audit Log", "The browser console", "An email sent to the admin who performed the upload", "Google Vault"],
+        correctIndex: 2,
+        explanation: "When a bulk operation completes, Google sends an email to the administrator with a link to a log file detailing successes and failures."
+    },
+    {
+        id: 7,
+        category: "directory",
+        text: "You want to hide a specific group, 'Confidential Project', from the Global Address List so other employees cannot find it when searching contacts. What setting do you change?",
+        options: ["Group > Access Settings > Who can view membership", "Group > Settings > Directory visibility", "Admin Console > Directory Settings > Sharing", "It is not possible to hide groups"],
+        correctIndex: 1,
+        explanation: "Unchecking 'List this group in the directory' in the Group settings hides it from the autocomplete and directory search for general users."
+    },
+    {
+        id: 8,
+        category: "directory",
+        text: "Can you rename a user's primary domain (e.g., user@old-domain.com to user@new-domain.com)?",
+        options: ["No, you must delete and recreate", "Yes, but only if the new domain is a secondary domain or alias of the account", "Yes, any domain works", "Only via API"],
+        correctIndex: 1,
+        explanation: "You can change a user's email domain, but the new domain must already be verified and added to the Workspace environment as a secondary domain or domain alias."
+    },
+    {
+        id: 9,
+        category: "directory",
+        text: "You have enabled 'Contact Sharing' for the organization. How long does it typically take for a new user to appear in the autocomplete of other users?",
+        options: ["Instantly", "Up to 24 hours", "1 week", "Only after they login"],
+        correctIndex: 1,
+        explanation: "Directory propagation across Google services (Gmail autocomplete, Drive sharing) can take up to 24 hours to fully replicate."
+    },
+    {
+        id: 10,
+        category: "directory",
+        text: "A user forgot their password. You reset it. To ensure security, what box should you check in the reset dialog?",
+        options: ["Disable account for 24 hours", "Ask for a password change at the next sign-in", "Send password via SMS", "Enable 2SV immediately"],
+        correctIndex: 1,
+        explanation: "Forcing a password change ensures that even though the admin knows the temporary password, the user sets a private one immediately upon access."
+    },
+    {
+        id: 11,
+        category: "directory",
+        text: "You want to allow users to create their own Groups, but only for 'Internal' use. They should not be able to create groups that receive email from the internet. Where is this controlled?",
+        options: ["Apps > Google Workspace > Groups for Business > Sharing Settings", "Directory > Groups", "Security > API Controls", "This must be done via API"],
+        correctIndex: 0,
+        explanation: "The 'Groups for Business' service settings allow you to control if users can create groups, and the default access settings for those groups."
+    },
+    {
+        id: 12,
+        category: "directory",
+        text: "A user is suspended by Google for 'spamming'. You investigate and confirm their account was compromised. You have secured the account. How do you restore them?",
+        options: ["You cannot; only Google Support can", "Click 'Restore' in the user profile, but you might need to solve a CAPTCHA or appeal if the button is grayed out", "Delete and recreate", "Wait 24 hours"],
+        correctIndex: 1,
+        explanation: "Admins can usually restore suspended users. However, for serious abuse flags, the button might be disabled, requiring a support appeal."
+    },
+    {
+        id: 13,
+        category: "directory",
+        text: "You need to add a custom field 'Employee ID' to all user profiles. Where do you configure this schema?",
+        options: ["Security > Attributes", "Directory > Users > More > Manage Custom Attributes", "Apps > Settings", "Billing > Settings"],
+        correctIndex: 1,
+        explanation: "Custom attributes are managed in the Directory section. Once defined, they appear in user profiles and can be used for Dynamic Groups."
+    },
+    {
+        id: 14,
+        category: "directory",
+        text: "What is the primary difference between a 'Secondary Domain' and a 'Domain Alias'?",
+        options: ["No difference", "Secondary Domain allows distinct users (user@b.com); Domain Alias is just an alternate name for everyone (user@a.com gets mail at user@b.com)", "Domain Alias costs extra", "Secondary Domain is for external contacts"],
+        correctIndex: 1,
+        explanation: "A Domain Alias applies to everyone (Bob@A.com automatically gets Bob@B.com). A Secondary Domain allows you to create a specific user solely on B.com."
+    },
+    {
+        id: 15,
+        category: "directory",
+        text: "You want to grant a user temporary admin rights for 2 days. Is this possible natively?",
+        options: ["Yes, via 'Privilege Expiry'", "No, you must remember to remove it manually", "Yes, using Google Cloud IAM", "Yes, via Groups"],
+        correctIndex: 1,
+        explanation: "Currently, the core Admin Console does not support 'Time-Based' admin role assignment. You must manually revoke the role or use a third-party script."
+    },
+
+    // ==========================================
+    // MODULE 2: OBJECT MANAGEMENT (IDs 16-30)
+    // ==========================================
+    {
+        id: 16,
+        category: "objects",
+        text: "You change a setting in the 'North America' OU. The 'Sales' OU is inside 'North America'. The Sales OU does not update. Why?",
+        options: ["Google is down", "The Sales OU is set to 'Override' (Locally applied)", "The Sales OU is locked", "Inheritance takes 48 hours"],
+        correctIndex: 1,
+        explanation: "If a child OU has been manually changed in the past (Overridden), it breaks the inheritance chain. It will no longer update when the parent changes."
+    },
+    {
+        id: 17,
+        category: "objects",
+        text: "You want to create an admin who can reset passwords for the 'Sales' team but cannot touch the 'Finance' team. How do you achieve this?",
+        options: ["Make them a Super Admin", "Create a Custom Role with 'User Management' privilege and assign it restricted to the 'Sales' OU", "Use the Help Desk System Role", "You cannot restrict admins by OU"],
+        correctIndex: 1,
+        explanation: "When assigning a role, you can scope it. You select the Custom Role, then select the specific Organizational Unit (Sales) it applies to."
+    },
+    {
+        id: 18,
+        category: "objects",
+        text: "Which of these is a valid strategy for Organizational Unit (OU) structure?",
+        options: ["By geographic location", "By department", "By device type (e.g., Chrome Devices)", "All of the above"],
+        correctIndex: 3,
+        explanation: "OUs are flexible. Common strategies include Location, Department, or even Device Type (creating an OU specifically for Kiosk Chromebooks)."
+    },
+    {
+        id: 19,
+        category: "objects",
+        text: "You want to prevent the 'Interns' OU from accessing the 'AppSheet' service. You turn it OFF for Interns. However, Interns can still access it. What is the most likely reason?",
+        options: ["AppSheet is a core service", "The user is in a Group that has AppSheet turned ON, and Groups override OUs", "Browser cache", "It takes 1 week to apply"],
+        correctIndex: 1,
+        explanation: "Access Groups can override OU settings. If a user is in a 'Configuration Group' that has the service ON, it wins over the OU setting of OFF."
+    },
+    {
+        id: 20,
+        category: "objects",
+        text: "What is the 'Reseller Admin' role?",
+        options: ["An admin who sells products", "A role granted to a Google Partner to manage your instance remotely", "A role for your finance team", "It does not exist"],
+        correctIndex: 1,
+        explanation: "If you buy Workspace through a reseller, they can have delegated administration rights to help you troubleshoot. You can toggle this access in Account Settings."
+    },
+    {
+        id: 21,
+        category: "objects",
+        text: "You have 100 users. 10 of them need to use Google Vault. Do you need to upgrade all 100 users to a higher license?",
+        options: ["Yes, licensing is all or nothing", "No, you can use 'Partial Domain Licensing' (PDL) to assign specific licenses to specific users", "No, Vault is free", "Yes, unless you use different domains"],
+        correctIndex: 1,
+        explanation: "Workspace allows mixed licensing. You can have 90 Business Starter users and 10 Business Plus users in the same console."
+    },
+    {
+        id: 22,
+        category: "objects",
+        text: "A user is complaining they cannot install a specific Chrome Extension. You checked their OU and it is 'Allowed'. What else should you check?",
+        options: ["If the extension is blocked at the Device OU level", "If they are using Firefox", "If they have internet", "If they are a Super Admin"],
+        correctIndex: 0,
+        explanation: "Chrome policies apply to Users AND Devices. If the user is on a managed Chromebook in a 'Kiosk' OU that blocks extensions, that policy may apply."
+    },
+    {
+        id: 23,
+        category: "objects",
+        text: "You want to force a specific desktop wallpaper for all Chrome devices in the 'Lobby' OU. Where is this setting?",
+        options: ["Devices > Chrome > Settings > Device Settings", "Devices > Chrome > Settings > User & Browser Settings", "Personalization > Themes", "It is not possible"],
+        correctIndex: 0,
+        explanation: "Wallpaper for the login screen or kiosk mode is usually a Device Setting. Wallpaper for a logged-in user is a User Setting."
+    },
+    {
+        id: 24,
+        category: "objects",
+        text: "Can a Super Admin see the data in a user's Drive without changing the user's password?",
+        options: ["No, privacy laws prevent this", "Yes, using the Investigation Tool or Vault", "Yes, by logging in as them", "Only if they ask Google Support"],
+        correctIndex: 1,
+        explanation: "Super Admins can access user data for legitimate business purposes using eDiscovery tools (Vault) or the Investigation Tool without logging in as the user."
+    },
+    {
+        id: 25,
+        category: "objects",
+        text: "You deleted an Organizational Unit (OU). What happens to the users inside it?",
+        options: ["They are deleted", "They are moved to the Parent OU", "You cannot delete an OU that contains users", "They are suspended"],
+        correctIndex: 2,
+        explanation: "Google prevents you from deleting an OU if it contains Users or Devices. You must empty it (move them elsewhere) first."
+    },
+    {
+        id: 26,
+        category: "objects",
+        text: "You want to test a new Gmail feature (e.g., Gemini AI) with a small 'Pilot Team'. How do you enable it only for them?",
+        options: ["Turn it on for everyone", "Create a 'Pilot' OU or Group and enable 'Early Access' or the specific app for them", "Ask Google", "Use a VPN"],
+        correctIndex: 1,
+        explanation: "Using a Pilot OU or an Access Group is the standard testing methodology before rolling out features to the Root OU."
+    },
+    {
+        id: 27,
+        category: "objects",
+        text: "Which privilege allows an admin to modify the company logo and name in the console?",
+        options: ["Domain Settings > Account Settings", "Users > Update", "Reports > Read", "Groups > Create"],
+        correctIndex: 0,
+        explanation: "Modifying the organization name, logo, and primary contact info falls under 'Account Settings' privileges."
+    },
+    {
+        id: 28,
+        category: "objects",
+        text: "You want to stop users in the 'Students' OU from changing their profile photo. Where do you go?",
+        options: ["Directory > Directory Settings > Profile Editing", "Security > Authentication", "Apps > Gmail", "Devices > Settings"],
+        correctIndex: 0,
+        explanation: "Profile Editing settings allow you to control which fields (Photo, Name, Gender, Birthday) users can change themselves."
+    },
+    {
+        id: 29,
+        category: "objects",
+        text: "A manager wants to receive a weekly report of all inactive users. Can you automate this?",
+        options: ["Yes, using the 'Schedule' feature in Reports", "No, they must check manually", "Only via API", "Yes, by emailing support"],
+        correctIndex: 0,
+        explanation: "Many reports in the Admin Console allow you to set a filter (e.g., Last Login > 30 days) and verify/schedule an export."
+    },
+    {
+        id: 30,
+        category: "objects",
+        text: "You have assigned a license to a user, but they still see 'Your trial has expired' when opening Drive. Why?",
+        options: ["Licenses take 24 hours to propagate", "You didn't turn the Service ON for their OU", "They need to clear cache", "Any of the above"],
+        correctIndex: 3,
+        explanation: "This is a classic troubleshooting scenario. It could be propagation lag (up to 24h), the Service being disabled in the OU, or browser cache."
+    },
+
+    // ==========================================
+    // MODULE 3: CORE SERVICES (IDs 31-45)
+    // ==========================================
+    {
+        id: 31,
+        category: "services",
+        text: "You want to ensure that if a user sends an email to 'competitor.com', the message is rejected and the user gets a custom error message. What do you use?",
+        options: ["Blocked Senders", "Content Compliance rule", "Phishing filter", "DMARC"],
+        correctIndex: 1,
+        explanation: "Content Compliance rules allow complex logic: 'If Recipient contains competitor.com, Reject message and Send Custom Notice'."
+    },
+    {
+        id: 32,
+        category: "services",
+        text: "You need to whitelist an IP address (192.168.1.5) that sends automated invoices to your users so it doesn't go to Spam. Where is this?",
+        options: ["Apps > GWS > Gmail > Spam, Phishing and Malware > Email Whitelist", "Security > API Controls", "Directory > Whitelist", "Network > Settings"],
+        correctIndex: 0,
+        explanation: "The 'Email Whitelist' setting in Gmail Apps settings is specifically for allowing IP addresses to bypass spam filters."
+    },
+    {
+        id: 33,
+        category: "services",
+        text: "What is the function of the 'Default Routing' setting in Gmail?",
+        options: ["It routes all mail to the trash", "It allows you to set global rules (like Dual Delivery) for all mail flow", "It is for personal gmail accounts", "It controls signatures"],
+        correctIndex: 1,
+        explanation: "Default Routing is powerful. It can fork emails (send a copy to another server), change route based on recipients, or modify envelopes."
+    },
+    {
+        id: 34,
+        category: "services",
+        text: "You want to allow the 'Executive' OU to share Drive files with 'Anyone with the link', but restrict the 'Interns' OU to only 'Recipients Only'. How?",
+        options: ["You can't; Sharing is global", "Configure Sharing Settings for each OU separately", "Use a Group", "Use Trust Rules"],
+        correctIndex: 1,
+        explanation: "Drive Sharing settings are OU-based. You select the OU on the left and choose the sharing level (Link Sharing vs Trusted Domains vs Internal Only)."
+    },
+    {
+        id: 35,
+        category: "services",
+        text: "A user wants to create a Shared Drive but cannot find the button. What is the cause?",
+        options: ["Shared Drive creation is disabled for their OU", "They are out of storage", "They are not a manager", "Shared Drives are deprecated"],
+        correctIndex: 0,
+        explanation: "Admins can control *who* is allowed to create new Shared Drives to prevent clutter. It's likely disabled for their Organizational Unit."
+    },
+    {
+        id: 36,
+        category: "services",
+        text: "External users report they get a 'bounce' when emailing your domain. The error says 'SPF validation failed'. What is wrong?",
+        options: ["Your MX records are wrong", "Your TXT record for SPF is missing or doesn't include the sending server", "You didn't pay the bill", "DKIM is missing"],
+        correctIndex: 1,
+        explanation: "SPF is a list of approved IP addresses/servers allowed to send mail for you. If a server isn't on the list, the receiver blocks it."
+    },
+    {
+        id: 37,
+        category: "services",
+        text: "You want to migrate email from a legacy Exchange server to Google Workspace. You want to do it server-side without user interaction. What tool?",
+        options: ["GWSMO", "Google Takeout", "Data Migration Service (DMS)", "Drive File Stream"],
+        correctIndex: 2,
+        explanation: "Data Migration Service (DMS) in the Admin Console connects to the legacy server via IMAP/Exchange and pulls data over."
+    },
+    {
+        id: 38,
+        category: "services",
+        text: "A user owns a Google Doc and leaves the company. Their account is deleted. What happens to the Doc?",
+        options: ["It is deleted", "It goes to the trash", "It is assigned to the Super Admin", "It stays but becomes read-only"],
+        correctIndex: 0,
+        explanation: "This is a critical concept. In 'My Drive', files are tied to the user. If the user is deleted, their files are deleted. Always transfer ownership first."
+    },
+    {
+        id: 39,
+        category: "services",
+        text: "You want to make a specific Google Calendar resource (e.g., 'Room 101') automatically decline conflicting bookings.",
+        options: ["This is default behavior", "Go to the Calendar Resource settings > Auto-accept invitations that do not conflict", "You must use a script", "Only users can decline"],
+        correctIndex: 1,
+        explanation: "Calendar Resources have their own settings. You can set them to 'Auto-accept invitations that do not conflict' (and imply decline conflicts)."
+    },
+    {
+        id: 40,
+        category: "services",
+        text: "A user wants to recall an email sent 5 minutes ago. Is this possible?",
+        options: ["Yes, if the recipient is internal", "No, 'Undo Send' only works for a maximum of 30 seconds", "Yes, using the Investigation Tool", "Yes, if they have Vault"],
+        correctIndex: 1,
+        explanation: "Gmail's 'Undo Send' is a delay, not a recall. Once the delay (max 30s) passes, the email is gone. Admins can delete it via Investigation Tool, but users cannot 'recall' it."
+    },
+    {
+        id: 41,
+        category: "services",
+        text: "You want to ensure all Google Meet calls are recorded automatically for the 'Sales' OU.",
+        options: ["Turn on 'Automatic Recording' in Meet Safety Settings", "This is not a feature", "Tell users to press record", "Use a third-party extension"],
+        correctIndex: 1,
+        explanation: "Currently, Google Meet does not have a native 'Auto-Record' policy for meetings. It must be manually initiated by a participant."
+    },
+    {
+        id: 42,
+        category: "services",
+        text: "Which record is used to digitally sign emails so the recipient knows they haven't been tampered with?",
+        options: ["SPF", "DKIM", "DMARC", "MX"],
+        correctIndex: 1,
+        explanation: "DKIM (DomainKeys Identified Mail) attaches a cryptographic signature to the email header."
+    },
+    {
+        id: 43,
+        category: "services",
+        text: "You want to allow users to work on Google Docs even when they have no internet connection. What must you do?",
+        options: ["Enable 'Offline' access in the Admin Console", "Tell users to install the Google Docs Offline Chrome extension", "Both A and B", "Nothing, it works by default"],
+        correctIndex: 2,
+        explanation: "It requires a two-step process: The Admin must allow it in the Console, AND the user must rely on the extension/browser setting."
+    },
+    {
+        id: 44,
+        category: "services",
+        text: "A user is trying to email an executable file (.exe) to a client. It bounces. Why?",
+        options: ["File is too large", "Gmail blocks executable attachments for security", "SPF failed", "They need to zip it"],
+        correctIndex: 1,
+        explanation: "Gmail has a hard block on .exe, .bat, and other executable file types to prevent malware, even if zipped."
+    },
+    {
+        id: 45,
+        category: "services",
+        text: "You need to set up a 'Support' inbox that 5 people can access and reply from. What is the best practice?",
+        options: ["Share the password for 'support@'", "Create a Collaborative Inbox (Google Group)", "Delegate the 'support' user account to the 5 people", "Both B and C are valid"],
+        correctIndex: 3,
+        explanation: "Sharing passwords is bad. A Collaborative Inbox (Group) or Email Delegation (User) are the two secure, supported methods."
+    },
+
+    // ==========================================
+    // MODULE 4: SECURITY (IDs 46-60)
+    // ==========================================
+    {
+        id: 46,
+        category: "security",
+        text: "You enable 'Enforce 2-Step Verification' immediately. What happens to users who haven't set it up yet?",
+        options: ["They are prompted to set it up", "They are locked out of their accounts", "They get a grace period", "They get an SMS"],
+        correctIndex: 1,
+        explanation: "If you do not use the 'Enrollment Period' setting and enforce immediately, users without 2SV configured are locked out instantly."
+    },
+    {
+        id: 47,
+        category: "security",
+        text: "Which feature allows you to block logins from countries where you have no employees?",
+        options: ["Context-Aware Access", "2SV", "Network Masks", "Cloud Identity"],
+        correctIndex: 0,
+        explanation: "Context-Aware Access allows you to create access levels based on Geo-IP (Location). You can block 'Anywhere except US/Europe'."
+    },
+    {
+        id: 48,
+        category: "security",
+        text: "An app on a user's phone is accessing their contacts. You want to see which app it is and block it. Where?",
+        options: ["Security > API Controls > App Access Control", "Devices > Mobile", "Reports > Login", "Apps > Marketplace"],
+        correctIndex: 0,
+        explanation: "API Controls shows a list of all third-party apps accessing your data. You can 'Block' or 'Trust' them from there."
+    },
+    {
+        id: 49,
+        category: "security",
+        text: "You want to force users to use a specific password strength (e.g., Minimum 10 characters).",
+        options: ["Security > Password Management > Password length", "This is automatic", "You can only enforce length for 8 characters", "Directory > Settings"],
+        correctIndex: 0,
+        explanation: "Google allows you to set minimum and maximum password length enforcement in the Security settings."
+    },
+    {
+        id: 50,
+        category: "security",
+        text: "A user receives a suspicious email warning banner: 'This message seems dangerous'. Why?",
+        options: ["The sender failed DMARC authentication", "The email contains a virus", "The sender is new", "Any/All of the above"],
+        correctIndex: 3,
+        explanation: "Gmail's AI triggers these banners for various reasons: spoofing failures (DMARC), phishing patterns, or unusual sender behavior."
+    },
+    {
+        id: 51,
+        category: "security",
+        text: "You want to prevent users from installing *any* third-party Drive apps (like PDF editors) unless you approve them.",
+        options: ["Set 'Unconfigured third-party apps' to 'Do not allow users to access any third-party data'", "Remove their internet", "Turn off Drive", "Use Chrome Policies"],
+        correctIndex: 0,
+        explanation: "In API Controls, you can restrict access so that only 'Trusted' (Whitelisted) apps can access sensitive scopes like Drive."
+    },
+    {
+        id: 52,
+        category: "security",
+        text: "What is the difference between 'Basic' and 'Advanced' Mobile Management?",
+        options: ["Basic is free, Advanced costs money", "Basic requires an agent app, Advanced does not", "Advanced allows for Work Profiles and granular app management; Basic is just screen lock/wipe", "There is no difference"],
+        correctIndex: 2,
+        explanation: "Advanced Management requires the 'Google Device Policy' app (Android) or profile (iOS) and allows for Work Profiles, app distribution, and deep auditing."
+    },
+    {
+        id: 53,
+        category: "security",
+        text: "You have a legal requirement to preserve all chats in Google Chat for 7 years. Where do you configure this?",
+        options: ["Chat Settings > History On", "Google Vault > Retention Rules", "Archive User settings", "Backup & Sync"],
+        correctIndex: 1,
+        explanation: "Vault is the tool for retention. You set a default retention rule for 'Google Chat' to '7 years' (or indefinite)."
+    },
+    {
+        id: 54,
+        category: "security",
+        text: "A user is leaving. You want to wipe corporate data from their personal Android phone without deleting their family photos.",
+        options: ["Select 'Wipe Account' (Remote Wipe)", "Select 'Wipe Device' (Factory Reset)", "Change their password", "Disable the device"],
+        correctIndex: 0,
+        explanation: "Account Wipe (only available if using Advanced Management/Work Profile or Basic sync) targets only the Workspace data."
+    },
+    {
+        id: 55,
+        category: "security",
+        text: "You notice a spike in 'Failed Login Attempts' in the Alert Center. What should you do?",
+        options: ["Ignore it", "Investigate the IP addresses in the Investigation Tool", "Change everyone's password", "Turn off email"],
+        correctIndex: 1,
+        explanation: "The Investigation Tool allows you to pivot on the alert to see which accounts are targeted and from where, then take action (like forcing a password reset)."
+    },
+    {
+        id: 56,
+        category: "security",
+        text: "Can you prevent users from copying/pasting corporate data from Gmail to their personal Notes app on mobile?",
+        options: ["Yes, with Advanced Mobile Management (Data Loss Prevention settings)", "No, mobile is uncontrollable", "Only on Android", "Only on iOS"],
+        correctIndex: 0,
+        explanation: "On iOS/Android with Advanced Management, you can prevent 'Copy/Paste' between the Work Profile and the Personal Profile."
+    },
+    {
+        id: 57,
+        category: "security",
+        text: "What is a 'Security Key' in the context of 2SV?",
+        options: ["A password", "A physical hardware device (USB/NFC) like a YubiKey or Titan Key", "A code sent via SMS", "A backup code"],
+        correctIndex: 1,
+        explanation: "Security Keys are the strongest form of 2FA because they are phishing-resistant (they verify the domain URL physically)."
+    },
+    {
+        id: 58,
+        category: "security",
+        text: "You want to allow the 'Admins' OU to bypass the web proxy settings applied to the rest of the company. How?",
+        options: ["Network settings > Proxy", "Chrome > Settings > User & Browser > Network > Proxy Mode > No Proxy (applied to Admins OU)", "Disable Wi-Fi", "Use a VPN"],
+        correctIndex: 1,
+        explanation: "Chrome policies (including Proxy settings) are applied via OUs. You can override the proxy setting for the Admins OU."
+    },
+    {
+        id: 59,
+        category: "security",
+        text: "How do you ensure that only company-owned devices can sync Google Drive data?",
+        options: ["Context-Aware Access > Device Policy (Company Owned = True)", "Turn off Drive for personal OUs", "Use an IP restriction", "Ask users nicely"],
+        correctIndex: 0,
+        explanation: "CAA allows you to check the 'Device State'. You can require the device to be in the 'Company Owned' inventory to allow Drive access."
+    },
+    {
+        id: 60,
+        category: "security",
+        text: "A user claims they received a phishing email, but they deleted it. You need to find it to see who sent it. What tool?",
+        options: ["Email Log Search", "Security Investigation Tool", "Vault", "All of the above"],
+        correctIndex: 3,
+        explanation: "Technically all work, but the Investigation Tool is best for 'Finding AND remediation'. Email Log Search just shows delivery."
+    },
+
+    // ==========================================
+    // MODULE 5: TROUBLESHOOTING (IDs 61-75)
+    // ==========================================
+    {
+        id: 61,
+        category: "troubleshooting",
+        text: "A user says they cannot access a specific Google Service (e.g., YouTube). The service is ON for their OU. What is a common check?",
+        options: ["Check if they are under 18 (Age-based access settings)", "Check if the internet is down", "Check if they are suspended", "Check if they have a license"],
+        correctIndex: 0,
+        explanation: "Google recently introduced Age-Based Access. If a user is marked as 'Under 18', they lose access to many additional services like YouTube, regardless of OU settings."
+    },
+    {
+        id: 62,
+        category: "troubleshooting",
+        text: "You need to contact Google Enterprise Support. Where do you find the PIN required for the phone call?",
+        options: ["It is emailed to you", "In the Admin Console > clicking the '?' (Help Assistant) > Contact Support", "On the invoice", "You don't need a PIN"],
+        correctIndex: 1,
+        explanation: "The PIN is dynamic and generated inside the 'Get Help' (?) window when you select the Phone option."
+    },
+    {
+        id: 63,
+        category: "troubleshooting",
+        text: "A user cannot login. Error: 'Couldn't find your Google Account'. What is the most likely cause?",
+        options: ["Wrong password", "Typo in the email address", "Account is suspended", "Account is deleted"],
+        correctIndex: 1,
+        explanation: "This specific error usually means the username entered does not exist (typo). If it was a password issue, it would say 'Wrong password'."
+    },
+    {
+        id: 64,
+        category: "troubleshooting",
+        text: "Email Log Search shows a message status as 'Bounced'. What does this mean?",
+        options: ["It was delivered to Spam", "The recipient server rejected it (e.g., user not found)", "It is queued", "It was archived"],
+        correctIndex: 1,
+        explanation: "Bounce means rejection. The receiving server said 'No'. Commonly due to invalid address or full mailbox."
+    },
+    {
+        id: 65,
+        category: "troubleshooting",
+        text: "You are trying to verify a domain but the TXT record verification keeps failing. What is a common mistake?",
+        options: ["TTL is too high (propagation delay)", "You pasted the wrong code", "Your DNS host hasn't updated yet", "All of the above"],
+        correctIndex: 3,
+        explanation: "DNS propagation can take time (TTL). Also, typos or adding the record to the wrong zone are common."
+    },
+    {
+        id: 66,
+        category: "troubleshooting",
+        text: "A user's chrome browser is behaving strangely. You want to reset their Chrome profile remotely. Can you?",
+        options: ["Yes, via 'Clear Profile' command in Devices", "No, they must do it locally", "Yes, by deleting their account", "Yes, by changing their password"],
+        correctIndex: 0,
+        explanation: "In the Devices > Chrome > Managed Browsers list, you can issue commands like 'Clear Profile' to reset the browser data."
+    },
+    {
+        id: 67,
+        category: "troubleshooting",
+        text: "You need to see exactly when a Super Admin downloaded a sensitive file from Drive. Which report?",
+        options: ["Drive Audit Log", "Admin Audit Log", "Login Audit Log", "Token Audit Log"],
+        correctIndex: 0,
+        explanation: "Drive Audit Log tracks *actions on files* (View, Edit, Download, Print). Admin log tracks *settings changes*."
+    },
+    {
+        id: 68,
+        category: "troubleshooting",
+        text: "Users are reporting that valid internal emails are being marked as spam with a yellow banner. What setting might be misconfigured?",
+        options: ["Internal Sender definitions", "SPF/DKIM is broken for your own domain", "The spam filter is too aggressive", "Any of the above"],
+        correctIndex: 3,
+        explanation: "If your own SPF/DKIM is broken, Google treats your own internal mail as spoofing."
+    },
+    {
+        id: 69,
+        category: "troubleshooting",
+        text: "A user tries to access a Google Doc and gets 'You need permission'. They request access. Who gets the email?",
+        options: ["The Super Admin", "The Owner of the document", "The IT Manager", "No one"],
+        correctIndex: 1,
+        explanation: "Access requests go directly to the file Owner (and editors, depending on settings), not the Admin."
+    },
+    {
+        id: 70,
+        category: "troubleshooting",
+        text: "You see 'User limit reached' when trying to add a new user. What do you do?",
+        options: ["Wait 24 hours", "Purchase more licenses", "Delete an old user", "Both B or C"],
+        correctIndex: 3,
+        explanation: "You cannot exceed your license cap. You must either free up a license (delete/archive a user) or buy a new one."
+    },
+    {
+        id: 71,
+        category: "troubleshooting",
+        text: "A Group member complains they are not receiving emails sent to the group. You check the Group settings and they are a member. What else could it be?",
+        options: ["Their 'Subscription' setting is set to 'No Email'", "The email went to spam", "The sender is blocked", "Any of the above"],
+        correctIndex: 3,
+        explanation: "Group members can often toggle their own subscription (Every email vs Digest vs No Email). Also check spam."
+    },
+    {
+        id: 72,
+        category: "troubleshooting",
+        text: "What does the 'Alert Center' provide?",
+        options: ["A list of invoices", "A unified view of notifications about potential issues (security, misconfiguration, hardware)", "A chat with Google support", "Email templates"],
+        correctIndex: 1,
+        explanation: "The Alert Center is the hub for critical notifications: 'Phishing spike detected', 'Device compromised', 'GCDS sync failed', etc."
+    },
+    {
+        id: 73,
+        category: "troubleshooting",
+        text: "You applied a retention rule in Vault for '365 days' and chose 'Expunge after retention'. A user deleted an email on Day 1. What happens on Day 366?",
+        options: ["It is permanently deleted from Google servers", "It stays in the Trash", "It stays in Vault", "Nothing"],
+        correctIndex: 0,
+        explanation: "Vault Retention with Expunge is destructive. Once the timer expires, the data is purged from Google systems completely."
+    },
+    {
+        id: 74,
+        category: "troubleshooting",
+        text: "A user reports their Google Drive files are missing. You check the audit log and see no 'Delete' events. What happened?",
+        options: ["They logged into the wrong account", "The files were 'Orphaned' (they lost their parent folder)", "Google lost them", "They are hidden"],
+        correctIndex: 1,
+        explanation: "Orphaned files occur when a parent folder is deleted by someone else, but the file (owned by the user) still exists. They can be found searching `is:unorganized`."
+    },
+    {
+        id: 75,
+        category: "troubleshooting",
+        text: "You are setting up GWSMO (Google Workspace Sync for Microsoft Outlook) for a user. It fails to sign in. What is a likely requisite?",
+        options: ["User must have 2SV enabled", "User must have 'Enable Less Secure Apps' ON (deprecated) or use 2SV + App Password / OAuth", "Outlook is too old", "GWSMO is discontinued"],
+        correctIndex: 1,
+        explanation: "Modern GWSMO uses OAuth. If using older methods/clients, 2SV plus an App Password might be required."
+    }
+];
