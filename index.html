@@ -578,6 +578,111 @@
             correctIndex: 0,
             explanation: "The Email Whitelist in Gmail settings allows you to enter IP addresses that should bypass spam filtering."
         }
+{
+        id: 51,
+        text: "Your organization uses a hybrid calendar environment. Some users are on Exchange (Microsoft), and some are on Google Workspace. You need to ensure that when a Google user books a meeting, they can see the free/busy status of an Exchange user. What must you configure?",
+        options: ["Calendar Interop", "Google Sync for Microsoft Outlook (GWSMO)", "Dual Delivery", "Secondary Calendar"],
+        correctIndex: 0,
+        explanation: "Calendar Interop is the specific tool designed to sync Free/Busy status between Google Calendar and Exchange/Office 365 environments."
+    },
+    {
+        id: 52,
+        text: "A project manager requests a new feature: they want incoming emails to 'project-alpha@company.com' to be delivered to a Google Group, but ALSO a copy should be sent to an external consultant (consultant@gmail.com). How do you configure this?",
+        options: ["Add the consultant to the Google Group", "Configure 'Default Routing' or 'Recipient Address Map' to add a secondary delivery envelope", "It is not possible to route to personal Gmail", "Give the consultant a license"],
+        correctIndex: 1,
+        explanation: "Using 'Routing' rules (Content compliance or Default routing) allows you to modify the message envelope to add more recipients (like forking the email) without adding them to the group."
+    },
+    {
+        id: 53,
+        text: "You have configured a 'Confidential' Organizational Unit (OU) for your R&D team. You want to ensure they can share documents with each other, but they CANNOT share documents with the 'Sales' OU. What is the best way to enforce this?",
+        options: ["Set Drive Sharing to 'OFF' for the R&D OU", "Create a Trust Rule (or Target Audience) allowing sharing only within the R&D OU", "Remove the Sales team from the directory", "Use a Shared Drive"],
+        correctIndex: 1,
+        explanation: "Trust Rules (replacing some older sharing settings) allow for granular control, such as 'Users in OU A can share with OU A, but NOT with OU B'."
+    },
+    {
+        id: 54,
+        text: "Your company has a strict policy: 'If a mobile device is inactive for 30 days, corporate data must be removed automatically.' You do not want to delete the user's personal photos. Which setting do you use?",
+        options: ["Device Management > Auto-Wipe", "Context-Aware Access", "Basic Mobile Management", "Advanced Mobile Management with an Automated Rule"],
+        correctIndex: 3,
+        explanation: "This requires Advanced Mobile Management to separate work/personal data (Account Wipe) and a Rule to trigger it based on inactivity."
+    },
+    {
+        id: 55,
+        text: "A Super Admin recently left the company abruptly. You suspended their account. However, you now realize several critical recurring calendar invites for company-wide meetings were owned by that account. What should you have done before suspending?",
+        options: ["Deleted the calendar events", "Transferred the Calendar resources and events to another active user", "Exported the data to a CSV", "Made the calendar public"],
+        correctIndex: 1,
+        explanation: "Best practice before removing/suspending a high-profile user is to check for and transfer ownership of Calendars and Drive files to prevent 'orphaned' resources."
+    },
+    {
+        id: 56,
+        text: "You suspect that an administrator account was compromised. You need to see a chronological list of every setting change made in the Admin Console over the last 24 hours. Which report do you access?",
+        options: ["Reports > Audit > Admin", "Security > Investigation Tool > Gmail Log", "Reports > Audit > Login", "Apps > G Suite > Settings"],
+        correctIndex: 0,
+        explanation: "The 'Admin' audit log specifically tracks actions taken *by administrators* within the console (creating users, changing settings, changing passwords)."
+    },
+    {
+        id: 57,
+        text: "Your marketing team wants to use a third-party email marketing app that requires 'Scope: Read/Write Mail'. You have blocked all third-party API access by default. How do you allow ONLY this app for ONLY the marketing team?",
+        options: ["Unblock all apps", "Configure API Controls to 'Trusted' for that specific App, and restrict it to the Marketing OU", "Give the Marketing team Super Admin access", "It is not possible to restriction apps by OU"],
+        correctIndex: 1,
+        explanation: "In Security > API Controls, you can whitelist a specific Client ID (App) and use an 'Access Scope' or limitation to apply that permission only to a specific OU."
+    },
+    {
+        id: 58,
+        text: "Users are complaining that legitimate emails from a specific partner domain (partner.com) are landing in Spam. You have verified partner.com has valid SPF/DKIM. What is the most effective way to fix this permanently?",
+        options: ["Tell users to click 'Not Spam'", "Add partner.com to the 'Email Whitelist' in Gmail settings", "Create a compliance rule to bypass spam for this domain", "Turn off spam filtering"],
+        correctIndex: 1,
+        explanation: "The Email Whitelist (often found in Spam, Phishing, and Malware settings) is designed to bypass spam classification for trusted domains/IPs."
+    },
+    {
+        id: 59,
+        text: "You are setting up Google Voice for your organization. You have purchased the licenses and assigned them. However, users say they cannot make calls. What step did you likely miss?",
+        options: ["Setting up the Auto-Attendant", "Assigning a phone number to each user", "Verifying the domain", "Installing the Voice app"],
+        correctIndex: 1,
+        explanation: "Assigning a license gives the *capability* to have a number, but you must manually (or bulk) assign the actual DID (Phone Number) to the user before they can call."
+    },
+    {
+        id: 60,
+        text: "You need to create a custom Directory attribute for 'Desk Location' so it appears in users' contact cards. After creating the attribute in the Admin Console, what must you do so users can see it?",
+        options: ["Nothing, it is automatic", "Make the attribute 'Visible to the organization' in Directory Settings", "Ask users to edit their profile", "Wait 24 hours"],
+        correctIndex: 1,
+        explanation: "Custom attributes are private by default. You must toggle the visibility settings in the Directory Profile options so other employees can view that data."
+    },
+    {
+        id: 61,
+        text: "Your legal team needs to search for all emails containing the word 'Project-X' sent by 'john@company.com' in the year 2022. They need to review the content but NOT delete or modify it. What permissions do they need?",
+        options: ["Super Admin", "Vault Priveleges (View All Matters, Manage Matters)", "Access to John's password", "Email Delegation"],
+        correctIndex: 1,
+        explanation: "You should not give Legal Super Admin access. Assigning them a custom role with Vault privileges allows them to perform eDiscovery without full admin rights."
+    },
+    {
+        id: 62,
+        text: "You are deploying 500 Chromebooks. You want them to automatically enroll in your domain when the user connects to Wi-Fi, without the user typing credentials. Is this possible?",
+        options: ["No, users must always log in", "Yes, using Zero-Touch Enrollment", "Yes, using a USB rubber ducky", "Yes, if they are on the same subnet"],
+        correctIndex: 1,
+        explanation: "Zero-Touch Enrollment involves the reseller registering the hardware serial numbers to your domain. When the device turns on, it knows it belongs to you."
+    },
+    {
+        id: 63,
+        text: "A user is receiving a 'User limit reached' error when trying to upload a file to a Shared Drive. What is the likely cause?",
+        options: ["Shared Drives have a 400,000 item limit", "The user is out of personal storage", "The Shared Drive is full (15 GB)", "Shared Drives cannot accept uploads from non-admins"],
+        correctIndex: 0,
+        explanation: "Shared Drives have a rigid item cap (currently 400,000 files/folders). While storage size can be huge, the *number* of items is limited."
+    },
+    {
+        id: 64,
+        text: "You want to enforce a policy that users can only log in to Google Workspace if they are physically located within the office IP range. Which feature enables this?",
+        options: ["2-Step Verification", "Context-Aware Access", "Network Masks", "VPN Enforcer"],
+        correctIndex: 1,
+        explanation: "Context-Aware Access allows you to create access levels based on attributes like IP Address, Device Security Posture, or Geo-location."
+    },
+    {
+        id: 65,
+        text: "During an acquisition, you need to merge 50 users from 'acquired-company.com' into your 'primary-company.com' workspace. You want to bring over their emails and contacts. Which tool is best suited for this simple server-to-server migration?",
+        options: ["Google Takeout", "Data Migration Service (DMS)", "GWSMO", "Third-party tools only"],
+        correctIndex: 1,
+        explanation: "DMS is the built-in tool in the Admin Console specifically designed for IMAP/Gmail-to-Gmail migrations of mail, contacts, and calendar data."
+    }
     ];
 
     // --- LOGIC ---
