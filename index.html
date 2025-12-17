@@ -336,18 +336,18 @@
         },
         {
             id: 12, category: "directory",
-            text: "Only executives need Gemini Alpha licenses. All others need standard Workspace. How do you configure this?",
+            text: "You're a Workspace administrator for a company that plans to purchase user-based subscriptions for both Google Workspace and Gemini Alpha. Only executives need access to Gemini Alpha, while all other employees require permanent access to Google Workspace. How can you configure user licenses to meet these needs?",
             options: [
-                "Assign Workspace to all, use a Group for executives to assign Gemini.", 
-                "Use a Group for non-executives to restrict Gemini.", 
-                "Automatically assign Workspace to all, create an OU for executives, and assign Gemini licenses only to that OU.", 
-                "Use an OU for non-executives and restrict access."
+                "Automatically assign a Google Workspace license to every user in your organization, create a Google Group for executives, and assign Gemini Alpha licenses to the executives’ group only.", 
+                "Create a Google Group for non-executive users and restrict access to Gemini Alpha for that group. All users will receive the default Google Workspace license.", 
+                "Automatically assign a Google Workspace license to every user in your organization, create an organizational unit (OU) for executives, and assign Gemini Alpha licenses only to that OU.", 
+                "Create an organizational unit (OU) for non-executive users and restrict access to Gemini Alpha for that OU. All users will receive the default Google Workspace license."
             ],
             correctIndex: 2,
             explanation: "Using an OU for executives makes license assignment clean and automatic based on hierarchy."
         },
         {
-            id: 13, category: "directory",
+            id: 13, category: "directory",    
             text: "A Workspace administrator can modify certain attributes of a user's account. Select three. (Select 3)",
             options: [
                 "Password strength monitoring", 
@@ -719,6 +719,7 @@
 
 </body>
 </html>
+
 
 
 
