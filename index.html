@@ -213,40 +213,42 @@
 
 </div>
 
-  <script>
-
-// ==========================================
+<script>
+    // ==========================================
     // DATA: ALL QUESTIONS
     // ==========================================
     const questions = [
         // --- Quiz 1: Account setup ---
         {
-            id: 1, category: "directory",
+            id: 1,
+            category: "directory",
             text: "What is the essential first step to activate and use Google Workspace services for your domain?",
             options: [
-                "Purchase a service-based license for your organization.", 
-                "Configure MX records to point to Google.", 
-                "Verify that you own the domain you want to associate with Google Workspace.", 
+                "Purchase a service-based license for your organization.",
+                "Configure MX records to point to Google.",
+                "Verify that you own the domain you want to associate with Google Workspace.",
                 "Provide Google with proof of identity."
             ],
             correctIndex: 2,
             explanation: "Domain verification is required to prove ownership before activating services."
         },
         {
-            id: 2, category: "directory",
+            id: 2,
+            category: "directory",
             text: "In the Google Workspace admin console, which section allows you to manage two-step verification and passwords?",
             options: ["Directory", "Account", "Security", "Rules"],
             correctIndex: 2,
             explanation: "Password policies and 2SV settings are found under the Security section."
         },
         {
-            id: 3, category: "directory",
-            text: "What are two types of information commonly found in DNS records? (Select 2)",
+            id: 3,
+            category: "directory",
+            text: "What are two types of information commonly found in DNS records?",
             options: [
-                "Domain-based Message Authentication Protocols", 
-                "DomainKeys Identified Mail", 
-                "Mail Exchanger Records (MX)", 
-                "Lightweight Directory Access Protocols", 
+                "Domain-based Message Authentication Protocols",
+                "DomainKeys Identified Mail",
+                "Mail Exchanger Records (MX)",
+                "Lightweight Directory Access Protocols",
                 "A Sender Policy Framework (SPF)"
             ],
             correctIndex: [2, 4],
@@ -255,34 +257,38 @@
 
         // --- Quiz 2: User account provisioning ---
         {
-            id: 4, category: "directory",
+            id: 4,
+            category: "directory",
             text: "Every user is assigned to a structure when their user account is created. What is the name of this structure?",
             options: ["A target audience", "A structured resource", "An organizational unit", "A Google group"],
             correctIndex: 2,
             explanation: "Users are always placed within an Organizational Unit (OU) upon creation."
         },
         {
-            id: 5, category: "directory",
+            id: 5,
+            category: "directory",
             text: "What happens when a user is provisioned in Google Workspace?",
             options: [
-                "Access is automatically granted to all Google Workspace services.", 
-                "Predefined administrator roles are granted to the user’s account.", 
-                "A Workspace account is added for the user.", 
+                "Access is automatically granted to all Google Workspace services.",
+                "Predefined administrator roles are granted to the user’s account.",
+                "A Workspace account is added for the user.",
                 "The Google Workspace admin transfers company data into the user’s account."
             ],
             correctIndex: 2,
             explanation: "Provisioning simply means the account is created; roles and data transfer are separate steps."
         },
         {
-            id: 6, category: "directory",
-            text: "A company with 5,000 employees is transitioning to Google Workspace. They need a solution to automatically create/update user accounts based on existing on-premises Microsoft Active Directory. Which service can be used?",
+            id: 6,
+            category: "directory",
+            text: "A company with 5,000 employees is transitioning to Google Workspace. They need a solution to automatically create and update user accounts in Google Workspace based on their existing on-premises Microsoft Active Directory data. This solution should also allow for the de-provisioning of accounts when users are removed from Active Directory. Which service can be used to achieve this user provisioning?",
             options: ["Google Cloud Directory Sync (GCDS)", "Data Migration Service", "Directory Sync", "Google Cloud Identity Platform"],
             correctIndex: 0,
             explanation: "GCDS is the standard tool for one-way synchronization from Active Directory to Google Workspace."
         },
         {
-            id: 7, category: "directory",
-            text: "What two pieces of information are mandatory to include when provisioning multiple users at once? (Select 2)",
+            id: 7,
+            category: "directory",
+            text: "What two pieces of information are mandatory to include when provisioning multiple users at once?",
             options: ["Password", "Access management level", "Organizational unit path", "Job title", "DNS records"],
             correctIndex: [0, 2],
             explanation: "Bulk uploads require a Password and the Organizational Unit Path to create the user correctly."
@@ -290,25 +296,30 @@
 
         // --- Quiz 3: Organizational structures ---
         {
-            id: 8, category: "directory",
-            text: "Your company prohibits sales team members (except directors) from using Gemini. How do you configure OUs efficiently?",
+            id: 8,
+            category: "directory",
+            // Fixed: Use backticks (template literal) to handle the newline and internal quotes safely
+            text: `Your company has a new policy where all sales team members, except directors, are prohibited from using Gemini in Google Workspace.
+As the Workspace administrator, how can you efficiently configure organizational units (OUs) to meet this policy?`,
             options: [
-                "Create an OU for members who need Gemini and a separate OU for the rest.", 
-                "Put all sales in one OU (Gemini OFF), place directors in a Configuration Group.", 
-                "Put all sales in one OU (Gemini OFF), place directors in a separate Access Group (Gemini ON).", 
-                "Put sales in one OU (Gemini OFF), place directors in a child OU (Gemini ON)."
+                "Create an OU for members of the sales team who need to use Gemini and a separate OU for the rest of the team.",
+                "Put all members of the sales team in one OU, restrict Gemini access to that OU, but place the sales directors in a separate configuration group that allows the use of Gemini.",
+                "Put all members of the sales team in one OU, restrict Gemini access to that OU, but place the sales directors in a separate access group that allows the use of Gemini. ",
+                "Put members of the sales team in one OU, restrict Gemini access to that OU, and then also place the sales directors in a child OU that allows the use of Gemini."
             ],
             correctIndex: 2,
             explanation: "Access Groups are the recommended way to override service settings for specific users within the same OU."
         },
         {
-            id: 9, category: "directory",
-            text: "You are the admin for a school district. Staff require different settings per school, but students are the same everywhere. How should you organize accounts?",
+            id: 9,
+            category: "directory",
+            text: "You are the Google Workspace admin for a school district with multiple schools. All students need access to the same services, but staff require access to additional services. Each school needs different settings configured for their staff. How should you organize your user accounts to efficiently give everyone the right access and control?",
             options: [
-                "Create separate OUs for 'students' and 'staff', then create child OUs for each school under these.", 
-                "Create separate OUs for 'students' and 'staff', then create child OUs for each school under the 'staff' OU.", 
-                "Create a single OU for the entire district.", 
-                "Create separate OUs for each school, then create child OUs for 'staff' and 'students' inside."
+                "Create separate OUs for “students” and “staff,” and then create child OUs for each school under these OUs.",
+                "Create separate OUs for “students” and “staff,” and then create child OUs for each school under the “staff” OU.",
+                "Create a single OU for the entire school district and apply all settings at this top level.",
+                // Fixed: Escaped quotes for \"staff\" and \"students\"
+                "Create separate OUs for each school, and then create child OUs for \"staff\" and \"students\" within each school's OU."
             ],
             correctIndex: 1,
             explanation: "This structure allows global settings for students and localized settings for staff."
@@ -316,58 +327,63 @@
 
         // --- Quiz 4: Manage users ---
         {
-            id: 10, category: "directory",
-            text: "An employee will work in a prohibited region for one month. How do you restrict access without losing data or licenses?",
+            id: 10,
+            category: "directory",
+            text: "An employee in your organization will spend one month working in a region where using Google Workspace is prohibited by company policy. As the Workspace administrator, how can you restrict their access to Google Workspace services without losing their data or licenses?",
             options: [
-                "Archive the user’s account and unarchive it when they return.", 
-                "Delete the user’s account and create a new account when they return.", 
-                "Suspend the user’s account and restore it when they return.", 
+                "Archive the user’s account and unarchive it when they return.",
+                "Delete the user’s account and create a new account when they return.",
+                "Suspend the user’s account and restore it when they return.",
                 "Delete the user’s account and restore it when they return."
             ],
             correctIndex: 2,
             explanation: "Suspension temporarily blocks access while preserving all data and licenses."
         },
         {
-            id: 11, category: "directory",
-            text: "When a user account is deleted, select two types of information that can be transferred. (Select 2)",
+            id: 11,
+            category: "directory",
+            text: "When a user account is deleted from Google Workspace, some information can be transferred to another user. Select two types of information that can be transferred.",
             options: ["User contacts", "Items in the user’s trash", "User calendar events", "A Google Maps file", "An email address"],
             correctIndex: [2, 4],
             explanation: "You can transfer Calendar data and re-assign the email address (as an alias) during deletion."
         },
         {
-            id: 12, category: "directory",
+            id: 12,
+            category: "directory",
             text: "You're a Workspace administrator for a company that plans to purchase user-based subscriptions for both Google Workspace and Gemini Alpha. Only executives need access to Gemini Alpha, while all other employees require permanent access to Google Workspace. How can you configure user licenses to meet these needs?",
             options: [
-                "Automatically assign a Google Workspace license to every user in your organization, create a Google Group for executives, and assign Gemini Alpha licenses to the executives’ group only.", 
-                "Create a Google Group for non-executive users and restrict access to Gemini Alpha for that group. All users will receive the default Google Workspace license.", 
-                "Automatically assign a Google Workspace license to every user in your organization, create an organizational unit (OU) for executives, and assign Gemini Alpha licenses only to that OU.", 
+                "Automatically assign a Google Workspace license to every user in your organization, create a Google Group for executives, and assign Gemini Alpha licenses to the executives’ group only.",
+                "Create a Google Group for non-executive users and restrict access to Gemini Alpha for that group. All users will receive the default Google Workspace license.",
+                "Automatically assign a Google Workspace license to every user in your organization, create an organizational unit (OU) for executives, and assign Gemini Alpha licenses only to that OU.",
                 "Create an organizational unit (OU) for non-executive users and restrict access to Gemini Alpha for that OU. All users will receive the default Google Workspace license."
             ],
             correctIndex: 2,
             explanation: "Using an OU for executives makes license assignment clean and automatic based on hierarchy."
         },
         {
-            id: 13, category: "directory",    
+            id: 13,
+            category: "directory",
             text: "A Workspace administrator can modify certain attributes of a user's account. Select three. (Select 3)",
             options: [
-                "Password strength monitoring", 
-                "Calendar event data", 
-                "Account creation date", 
-                "Email alias", 
-                "User profile photo", 
-                "Recovery email address", 
+                "Password strength monitoring",
+                "Calendar event data",
+                "Account creation date",
+                "Email alias",
+                "User profile photo",
+                "Recovery email address",
                 "Profile name in calendar invites"
             ],
             correctIndex: [0, 3, 6],
             explanation: "Admins can manage security attributes, aliases, and profile visibility settings."
         },
         {
-            id: 14, category: "directory",
+            id: 14,
+            category: "directory",
             text: "Which password setting can Workspace admins configure for their users?",
             options: [
-                "Require a strong password for GCDS users.", 
-                "Force password reset after 15 days.", 
-                "Prevent password reuse for Google-managed accounts.", 
+                "Require a strong password for GCDS users.",
+                "Force password reset after 15 days.",
+                "Prevent password reuse for Google-managed accounts.",
                 "Require a strong password for SAML users."
             ],
             correctIndex: 2,
@@ -376,25 +392,28 @@
 
         // --- Quiz 5: Google Groups ---
         {
-            id: 15, category: "directory",
-            text: "You need to automatically add 'Marketing' employees to a group. How do you do this?",
+            id: 15,
+            category: "directory",
+            // Fixed: Escaped quotes for \"Marketing Announcements\"
+            text: "Your company has recently implemented a new policy requiring all employees in the marketing department to be automatically added to a \"Marketing Announcements\" Google Group. You want to ensure that any current or future employees who join the marketing department are automatically added to this group without manual intervention.\nHow can you automatically manage the \"Marketing Announcements\" group membership based on the department an employee sits in?",
             options: [
-                "Manually add and remove employees.", 
-                "Create a dynamic group with a membership rule based on the 'department' attribute.", 
-                "Use a third-party application.", 
+                "Manually add and remove employees.",
+                "Create a dynamic group with a membership rule based on the 'department' attribute.",
+                "Use a third-party application.",
                 "Create a static group and use a script."
             ],
             correctIndex: 1,
             explanation: "Dynamic groups automatically update membership based on directory attributes."
         },
         {
-            id: 16, category: "directory",
-            text: "How can you manage support@yourdomain so multiple agents can access it collaboratively?",
+            id: 16,
+            category: "directory",
+            text: "Your company's support team receives hundreds of emails daily at support@yourdomain. Currently, individual support agents use their own accounts to access the support inbox, leading to confusion and missed emails. You want to streamline this process and improve response times.\nHow can you manage the support@yourdomain email address to ensure secure and efficient handling of customer inquiries?",
             options: [
-                "Create a shared mailbox (Collaborative Inbox) for support@yourdomain.", 
-                "Share account credentials.", 
-                "Create aliases for each agent.", 
-                "Set up an email distribution list."
+                "Create a shared mailbox for support@yourdomain that all support agents can access and manage collaboratively.",
+                "Have all support agents use the same account credentials to log in and access the support@yourdomain inbox.",
+                "Create separate email aliases for each support agent (e.g., support1@yourdomain, support2@yourdomain) and forward emails to their individual inboxes.",
+                "Set up an email list that distributes incoming support emails to all support agents simultaneously."
             ],
             correctIndex: 0,
             explanation: "Collaborative Inboxes allow multiple users to manage a single email address securely."
@@ -402,24 +421,26 @@
 
         // --- Quiz 6: Domain management ---
         {
-            id: 17, category: "directory",
-            text: "How can you simplify Drive collaboration with a partner company using Workspace?",
+            id: 17,
+            category: "directory",
+            text: "Your company regularly works with another company that uses Google Workspace. How can you simplify Drive collaboration between the two?",
             options: [
-                "Add their primary domain to allowed list.", 
-                "Add to trusted domains.", 
-                "Create a domain alias.", 
+                "Add their primary domain to allowed list.",
+                "Add to trusted domains.",
+                "Create a domain alias.",
                 "Add their primary domain, subdomains and any aliases to your list of trusted/allowed domains."
             ],
             correctIndex: 3,
             explanation: "Whitelisting the entire domain structure ensures all users from the partner company can collaborate."
         },
         {
-            id: 18, category: "directory",
-            text: "You purchased a company with its own domain and want them to keep receiving email there. What do you do?",
+            id: 18,
+            category: "directory",
+            text: "Your organization has just purchased another company and they already have their own domain. They will be using Google Workspace and you want them to be able to continue receiving email to their existing address. What approach makes this possible?",
             options: [
-                "Add as domain alias.", 
-                "Add as subdomain.", 
-                "Add the new domain as a secondary domain.", 
+                "Add as domain alias.",
+                "Add as subdomain.",
+                "Add the new domain as a secondary domain.",
                 "Create new account."
             ],
             correctIndex: 2,
@@ -428,62 +449,67 @@
 
         // --- Quiz 7: Shared resources management ---
         {
-            id: 19, category: "directory",
-            text: "How can you allow employees to book fitness equipment via Calendar?",
+            id: 19,
+            category: "directory",
+            text: "A company has fitness centers in some of their office buildings where employees can check out available exercise equipment. Equipment must be used in fitness centers. How can the company allow employees to book the equipment through Google Calendar?",
             options: [
-                "Only meeting rooms allowed.", 
-                "Create new resource.", 
-                "Create the equipment as a feature in Calendar and associate it with the resource for the fitness center.", 
+                "Only meeting rooms allowed.",
+                "Create new resource.",
+                "Create the equipment as a feature in Calendar and associate it with the resource for the fitness center.",
                 "Assign to OU."
             ],
             correctIndex: 2,
             explanation: "Features allow you to tag resources (like a room) with specific attributes (like equipment)."
         },
         {
-            id: 20, category: "directory",
-            text: "How can you add 50 new buildings to Google Workspace efficiently? (Select 2)",
+            id: 20,
+            category: "directory",
+            text: "A large company needs to add 50 new buildings to their Google Workspace account. How can they do this without adding each building individually? Select two responses.",
             options: [
-                "Add via Admin SDK Directory API.", 
-                "Add individually.", 
-                "Import the office details in bulk using a CSV file.", 
-                "Ask Gemini.", 
+                "Add via Admin SDK Directory API.",
+                "Add individually.",
+                "Import the office details in bulk using a CSV file.",
+                "Ask Gemini.",
                 "Use GCDS."
             ],
             correctIndex: [0, 2],
             explanation: "Bulk creation of buildings is supported via the API or CSV upload."
         },
         {
-            id: 21, category: "directory",
-            text: "What actions simplify booking resources for users? (Select 2)",
+            id: 21,
+            category: "directory",
+            text: "What actions can you take to simplify the process of booking resources for your users? Select two responses.",
             options: [
-                "Require approval.", 
-                "Use a structured format for rooms.", 
-                "Require admin access.", 
-                "Attach to OUs.", 
+                "Require approval.",
+                "Use a structured format for rooms.",
+                "Require admin access.",
+                "Attach to OUs.",
                 "Add the main work location for all users."
             ],
             correctIndex: [1, 4],
             explanation: "Structured resources and defined work locations help Calendar suggest the best rooms."
         },
         {
-            id: 22, category: "directory",
-            text: "You need to add 500 resources with fixed settings. How do you do it?",
+            id: 22,
+            category: "directory",
+            text: "Your company needs you to create 500 new resources in 12 different buildings in Google Calendar. The resource settings are fixed and won’t need changing.\nHow can you efficiently add these new resources?",
             options: [
-                "Use a CSV file to bulk upload.", 
-                "Use API.", 
-                "Use GCDS.", 
+                "Use a CSV file to bulk upload.",
+                "Use API.",
+                "Use GCDS.",
                 "Add one by one."
             ],
             correctIndex: 0,
             explanation: "CSV upload is the most efficient method for bulk resource creation."
         },
         {
-            id: 23, category: "directory",
-            text: "You want to share a resource calendar with a group. Where do you go?",
+            id: 23,
+            category: "directory",
+            text: "You're the Workspace administrator for your organization. You want to share a resource calendar with a specific group. Where would you go to complete this task?",
             options: [
-                "Groups page.", 
-                "Manage resources page.", 
-                "The Google Calendar page at calendar.google.com.", 
+                "Groups page.",
+                "Manage resources page.",
+                "The Google Calendar page at calendar.google.com.",
                 "Google Groups homepage."
             ],
             correctIndex: 2,
@@ -719,6 +745,7 @@
 
 </body>
 </html>
+
 
 
 
