@@ -298,7 +298,6 @@
         {
             id: 8,
             category: "directory",
-            // Fixed: Used template literal for multiline string
             text: `Your company has a new policy where all sales team members, except directors, are prohibited from using Gemini in Google Workspace.
 As the Workspace administrator, how can you efficiently configure organizational units (OUs) to meet this policy?`,
             options: [
@@ -318,7 +317,6 @@ As the Workspace administrator, how can you efficiently configure organizational
                 "Create separate OUs for “students” and “staff,” and then create child OUs for each school under these OUs.",
                 "Create separate OUs for “students” and “staff,” and then create child OUs for each school under the “staff” OU.",
                 "Create a single OU for the entire school district and apply all settings at this top level.",
-                // Fixed: Escaped quotes
                 "Create separate OUs for each school, and then create child OUs for \"staff\" and \"students\" within each school's OU."
             ],
             correctIndex: 1,
@@ -394,7 +392,6 @@ As the Workspace administrator, how can you efficiently configure organizational
         {
             id: 15,
             category: "directory",
-            // Fixed: Escaped internal quotes
             text: "Your company has recently implemented a new policy requiring all employees in the marketing department to be automatically added to a \"Marketing Announcements\" Google Group. You want to ensure that any current or future employees who join the marketing department are automatically added to this group without manual intervention.\nHow can you automatically manage the \"Marketing Announcements\" group membership based on the department an employee sits in?",
             options: [
                 "Manually add and remove employees.",
@@ -543,7 +540,7 @@ As the Workspace administrator, how can you efficiently configure organizational
             return;
         }
 
-        // RANDOMIZATION: Shuffle happens here for ALL modes (Exam and Practice)
+        // RANDOMIZATION: Shuffle now happens for ALL modes (Practice & Exam)
         shuffleArray(currentQuestions);
 
         // Exam Mode: Slice 50 after shuffling
@@ -575,22 +572,24 @@ As the Workspace administrator, how can you efficiently configure organizational
         document.getElementById('question-text').innerText = q.text;
         document.getElementById('feedback-area').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
-        document.getElementById('confirm-btn').classList.add('hidden');
         
         // Progress Bar
         const progress = ((currentIdx) / currentQuestions.length) * 100;
         document.getElementById('progress-bar').style.width = `${progress}%`;
 
         // Check if Multi-Select
+        // Logic fix: Only show hint if correctIndex is an Array (meaning multiple answers)
         const isMulti = Array.isArray(q.correctIndex);
         const hint = document.getElementById('multi-select-hint');
+        const confirmBtn = document.getElementById('confirm-btn');
         
         if (isMulti) {
             hint.classList.remove('hidden');
             hint.innerText = `(Select ${q.correctIndex.length} options)`;
-            document.getElementById('confirm-btn').classList.remove('hidden'); // Show confirm button
+            confirmBtn.classList.remove('hidden'); // Show confirm button
         } else {
-            hint.classList.add('hidden');
+            hint.classList.add('hidden'); // Hide hint for single answer
+            confirmBtn.classList.add('hidden'); // Hide confirm button (single click triggers)
         }
 
         // Render Options
