@@ -58,7 +58,7 @@
         }
 
         h1 { font-size: 28px; font-weight: 400; margin: 0 0 16px 0; }
-        h2 { font-size: 22px; font-weight: 400; margin: 0 0 24px 0; }
+        h2 { font-size: 22px; font-weight: 400; margin: 0 0 24px 0; line-height: 1.4; }
         p { line-height: 1.5; color: var(--text-secondary); margin-bottom: 20px; }
 
         /* BUTTONS */
@@ -132,7 +132,6 @@
         .feedback { margin-top: 20px; padding: 16px; background: #f1f3f4; border-left: 4px solid var(--text-secondary); border-radius: 0 4px 4px 0; }
         .hidden { display: none; }
         
-        .multi-hint { font-size: 12px; color: #5f6368; font-style: italic; margin-bottom: 10px; display: block; }
     </style>
 </head>
 <body>
@@ -186,8 +185,6 @@
         </div>
 
         <h2 id="question-text">Question Text</h2>
-        <span id="multi-select-hint" class="multi-hint hidden">Select 2 options</span>
-        
         <div id="options-list"></div>
 
         <div style="margin-top: 15px;">
@@ -540,7 +537,7 @@ As the Workspace administrator, how can you efficiently configure organizational
             return;
         }
 
-        // RANDOMIZATION: Shuffle now happens for ALL modes (Practice & Exam)
+        // RANDOMIZATION
         shuffleArray(currentQuestions);
 
         // Exam Mode: Slice 50 after shuffling
@@ -569,33 +566,33 @@ As the Workspace administrator, how can you efficiently configure organizational
         selectedIndices = []; // Reset selection
 
         document.getElementById('question-count').innerText = `QUESTION ${currentIdx + 1} OF ${currentQuestions.length}`;
-        document.getElementById('question-text').innerText = q.text;
         
+        // --- LOGIC CHANGE START ---
+        const questionTextElement = document.getElementById('question-text');
+        const confirmBtn = document.getElementById('confirm-btn');
+        
+        // Start with clean question text
+        questionTextElement.innerText = q.text;
+
         // Hide feedback area from previous question
         document.getElementById('feedback-area').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
-        
-        // --- KEY FIX HERE ---
-        // Ensure buttons and hints are strictly reset (hidden) before we check logic
-        const hint = document.getElementById('multi-select-hint');
-        const confirmBtn = document.getElementById('confirm-btn');
-        hint.classList.add('hidden');
-        confirmBtn.classList.add('hidden');
         
         // Progress Bar
         const progress = ((currentIdx) / currentQuestions.length) * 100;
         document.getElementById('progress-bar').style.width = `${progress}%`;
 
         // Check if Multi-Select
-        // The check is: Is correctIndex an array? (e.g. [0, 2]) vs just a number (e.g. 2)
         const isMulti = Array.isArray(q.correctIndex);
         
         if (isMulti) {
-            hint.classList.remove('hidden'); // Show hint
-            hint.innerText = `(Select ${q.correctIndex.length} options)`;
+            // Append (Select X) to the question text
+            questionTextElement.innerText += ` (Select ${q.correctIndex.length})`;
             confirmBtn.classList.remove('hidden'); // Show confirm button
-        } 
-        // No "else" needed because we force hid them at the start of the function
+        } else {
+            confirmBtn.classList.add('hidden'); // Hide confirm button
+        }
+        // --- LOGIC CHANGE END ---
 
         // Render Options
         const list = document.getElementById('options-list');
@@ -754,4 +751,3 @@ As the Workspace administrator, how can you efficiently configure organizational
 
 </body>
 </html>
-
