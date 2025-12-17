@@ -570,27 +570,32 @@ As the Workspace administrator, how can you efficiently configure organizational
 
         document.getElementById('question-count').innerText = `QUESTION ${currentIdx + 1} OF ${currentQuestions.length}`;
         document.getElementById('question-text').innerText = q.text;
+        
+        // Hide feedback area from previous question
         document.getElementById('feedback-area').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
+        
+        // --- KEY FIX HERE ---
+        // Ensure buttons and hints are strictly reset (hidden) before we check logic
+        const hint = document.getElementById('multi-select-hint');
+        const confirmBtn = document.getElementById('confirm-btn');
+        hint.classList.add('hidden');
+        confirmBtn.classList.add('hidden');
         
         // Progress Bar
         const progress = ((currentIdx) / currentQuestions.length) * 100;
         document.getElementById('progress-bar').style.width = `${progress}%`;
 
         // Check if Multi-Select
-        // Logic fix: Only show hint if correctIndex is an Array (meaning multiple answers)
+        // The check is: Is correctIndex an array? (e.g. [0, 2]) vs just a number (e.g. 2)
         const isMulti = Array.isArray(q.correctIndex);
-        const hint = document.getElementById('multi-select-hint');
-        const confirmBtn = document.getElementById('confirm-btn');
         
         if (isMulti) {
-            hint.classList.remove('hidden');
+            hint.classList.remove('hidden'); // Show hint
             hint.innerText = `(Select ${q.correctIndex.length} options)`;
             confirmBtn.classList.remove('hidden'); // Show confirm button
-        } else {
-            hint.classList.add('hidden'); // Hide hint for single answer
-            confirmBtn.classList.add('hidden'); // Hide confirm button (single click triggers)
-        }
+        } 
+        // No "else" needed because we force hid them at the start of the function
 
         // Render Options
         const list = document.getElementById('options-list');
@@ -749,3 +754,4 @@ As the Workspace administrator, how can you efficiently configure organizational
 
 </body>
 </html>
+
