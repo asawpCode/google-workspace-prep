@@ -298,7 +298,7 @@
         {
             id: 8,
             category: "directory",
-            // Fixed: Use backticks (template literal) to handle the newline and internal quotes safely
+            // Fixed: Used template literal for multiline string
             text: `Your company has a new policy where all sales team members, except directors, are prohibited from using Gemini in Google Workspace.
 As the Workspace administrator, how can you efficiently configure organizational units (OUs) to meet this policy?`,
             options: [
@@ -318,7 +318,7 @@ As the Workspace administrator, how can you efficiently configure organizational
                 "Create separate OUs for “students” and “staff,” and then create child OUs for each school under these OUs.",
                 "Create separate OUs for “students” and “staff,” and then create child OUs for each school under the “staff” OU.",
                 "Create a single OU for the entire school district and apply all settings at this top level.",
-                // Fixed: Escaped quotes for \"staff\" and \"students\"
+                // Fixed: Escaped quotes
                 "Create separate OUs for each school, and then create child OUs for \"staff\" and \"students\" within each school's OU."
             ],
             correctIndex: 1,
@@ -394,7 +394,7 @@ As the Workspace administrator, how can you efficiently configure organizational
         {
             id: 15,
             category: "directory",
-            // Fixed: Escaped quotes for \"Marketing Announcements\"
+            // Fixed: Escaped internal quotes
             text: "Your company has recently implemented a new policy requiring all employees in the marketing department to be automatically added to a \"Marketing Announcements\" Google Group. You want to ensure that any current or future employees who join the marketing department are automatically added to this group without manual intervention.\nHow can you automatically manage the \"Marketing Announcements\" group membership based on the department an employee sits in?",
             options: [
                 "Manually add and remove employees.",
@@ -516,7 +516,6 @@ As the Workspace administrator, how can you efficiently configure organizational
             explanation: "Resource calendar sharing permissions are managed directly in the Calendar interface."
         },
     ];
-      
 
     // --- APP LOGIC ---
     let currentMode = 'practice';
@@ -544,9 +543,11 @@ As the Workspace administrator, how can you efficiently configure organizational
             return;
         }
 
-        // Exam Mode: Shuffle & Slice 50
+        // RANDOMIZATION: Shuffle happens here for ALL modes (Exam and Practice)
+        shuffleArray(currentQuestions);
+
+        // Exam Mode: Slice 50 after shuffling
         if (mode === 'exam') {
-            shuffleArray(currentQuestions);
             currentQuestions = currentQuestions.slice(0, 50);
         }
 
@@ -633,9 +634,10 @@ As the Workspace administrator, how can you efficiently configure organizational
         const isCorrect = idx === q.correctIndex;
         const options = document.querySelectorAll('.option-item');
 
-        // Disable clicks
+        // Disable clicks for everyone
         options.forEach(o => o.style.pointerEvents = 'none');
 
+        // Only count score if this is the first selection
         if (isCorrect) score++;
 
         if (currentMode === 'practice') {
@@ -650,6 +652,9 @@ As the Workspace administrator, how can you efficiently configure organizational
             }
             showFeedback(q);
         } else {
+            // Exam Mode: Just highlight selected and show next
+            // Clear other selections (visually)
+            options.forEach(o => o.classList.remove('selected'));
             element.classList.add('selected');
             document.getElementById('next-btn').classList.remove('hidden');
         }
@@ -745,9 +750,3 @@ As the Workspace administrator, how can you efficiently configure organizational
 
 </body>
 </html>
-
-
-
-
-
-
