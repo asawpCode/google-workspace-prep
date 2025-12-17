@@ -149,31 +149,35 @@
 
         <hr style="border:0; border-top:1px solid #dadce0; margin: 30px 0;">
 
-        <div style="font-weight: 500; color: #5f6368;">STUDY BY MODULE</div>
+        <div style="font-weight: 500; color: #5f6368; margin-bottom: 15px;">SELECT A COURSE MODULE</div>
         <div class="module-grid">
+            
             <div class="module-card" onclick="startQuiz('practice', 'directory')">
-                <div class="module-title">Directory</div>
-                <div class="module-desc">Users, Groups, Contacts</div>
+                <div class="module-title">User and Resource Management</div>
+                <div class="module-desc">Users, Groups, Organizational Units</div>
             </div>
-            <div class="module-card" onclick="startQuiz('practice', 'objects')">
-                <div class="module-title">Objects</div>
-                <div class="module-desc">OUs, Roles, Licenses</div>
-            </div>
-            <div class="module-card" onclick="startQuiz('practice', 'services')">
-                <div class="module-title">Core Services</div>
-                <div class="module-desc">Gmail, Calendar, Drive</div>
-            </div>
-            <div class="module-card" onclick="startQuiz('practice', 'security')">
-                <div class="module-title">Security</div>
-                <div class="module-desc">2SV, Password, Access</div>
-            </div>
-            <div class="module-card" onclick="startQuiz('practice', 'troubleshooting')">
-                <div class="module-title">Troubleshooting</div>
-                <div class="module-desc">Reports, Logs, Support</div>
-            </div>
-        </div>
-    </div>
 
+            <div class="module-card" onclick="startQuiz('practice', 'services')">
+                <div class="module-title">Google Workspace Core Services</div>
+                <div class="module-desc">Gmail, Calendar, Drive, Meet</div>
+            </div>
+
+            <div class="module-card" onclick="startQuiz('practice', 'objects')">
+                <div class="module-title">Google Workspace Data Governance</div>
+                <div class="module-desc">Access Roles, Compliance, Regions</div>
+            </div>
+
+            <div class="module-card" onclick="startQuiz('practice', 'security')">
+                <div class="module-title">Google Workspace Security</div>
+                <div class="module-desc">SSO, 2SV, Password Policy</div>
+            </div>
+
+            <div class="module-card" onclick="startQuiz('practice', 'troubleshooting')">
+                <div class="module-title">Google Workspace Troubleshooting</div>
+                <div class="module-desc">Reports, Logs, Alerts</div>
+            </div>
+            
+        </div>
 <div id="quiz-screen" class="card hidden">
         <button class="btn-outline" onclick="goHome()" style="padding: 5px 10px; font-size: 12px; margin-bottom: 15px;">← Back to Dashboard</button>
 
@@ -968,5 +972,6 @@
 
 </body>
 </html>
+
 
 
