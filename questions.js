@@ -686,7 +686,7 @@ const questions = [
             "Investigate the Gmail log events for error messages or unusual patterns.",
             "Check the senders’ IP addresses in the inbound mail gateway."
         ],
-        correctIndex: 0,
+        correctIndex: [0, 1],
         explanation: "The correct answer is A, B."
     },
     {
@@ -1233,7 +1233,7 @@ const questions = [
             "Deploy advanced malware detection software on all user devices to scan and block malicious files.",
             "Implement two-factor authentication for all users."
         ],
-        correctIndex: 1,
+        correctIndex: [1, 2],
         explanation: "The correct answer is B, C."
     },
     {
@@ -1325,7 +1325,7 @@ const questions = [
             "Configure a blocked senders rule to block all emails from unknown senders",
             "Enable a default email quarantine for all users to isolate suspicious emails and determine if the messages haven't been authenticated."
         ],
-        correctIndex: 1,
+        correctIndex: [1, 2],
         explanation: "The correct answer is B, C."
     },
     {
