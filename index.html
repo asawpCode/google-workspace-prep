@@ -503,7 +503,8 @@
     // 4. Handle Single Select Logic
     function selectSingleAnswer(idx, element) {
         const q = currentQuestions[currentIdx];
-        const isCorrect = idx === q.correctIndex;
+        const correctIdx = Array.isArray(q.correctIndex) ? q.correctIndex : [q.correctIndex];
+        const isCorrect = correctIdx.includes(idx);
         const options = document.querySelectorAll('.option-item');
 
         // Disable clicks for everyone
@@ -519,8 +520,8 @@
             } else {
                 element.classList.add('wrong');
                 element.querySelector('span').innerText = '●';
-                // Show correct
-                options[q.correctIndex].classList.add('correct');
+                // Show all correct answers
+                correctIdx.forEach(ci => options[ci].classList.add('correct'));
             }
             showFeedback(q);
         } else {
