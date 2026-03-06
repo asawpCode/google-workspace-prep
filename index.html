@@ -215,25 +215,29 @@
 
         <div style="font-weight: 500; color: #5f6368; margin-bottom: 15px;">SELECT A COURSE MODULE</div>
         <div class="module-grid">
-            <div class="module-card" onclick="startQuiz('practice', 'directory')">
+            <div class="module-card" onclick="startQuiz('practice', ['directory','migration'])">
                 <div class="module-title">Module 1: User &amp; Resource Management</div>
-                <div class="module-desc">Directory, OUs, Groups, Domains</div>
+                <div class="module-desc">Directory, OUs, Groups, Domains, Migration</div>
             </div>
-            <div class="module-card" onclick="startQuiz('practice', 'security')">
+            <div class="module-card" onclick="startQuiz('practice', ['security','admin'])">
                 <div class="module-title">Module 2: Security &amp; Compliance</div>
-                <div class="module-desc">DLP, Chrome, Mobile, SSO, Investigation</div>
+                <div class="module-desc">DLP, SSO, Investigation, Context-Aware, Admin</div>
             </div>
-            <div class="module-card" onclick="startQuiz('practice', 'gmail')">
+            <div class="module-card" onclick="startQuiz('practice', ['gmail'])">
                 <div class="module-title">Module 3: Gmail &amp; Email</div>
                 <div class="module-desc">Routing, Compliance, MX Records, Spam</div>
             </div>
-            <div class="module-card" onclick="startQuiz('practice', 'vault')">
+            <div class="module-card" onclick="startQuiz('practice', ['vault'])">
                 <div class="module-title">Module 4: Google Vault</div>
                 <div class="module-desc">Holds, Retention, Matters, Legal Discovery</div>
             </div>
-            <div class="module-card" onclick="startQuiz('practice', 'services')">
+            <div class="module-card" onclick="startQuiz('practice', ['drive','calendar','meet','chat','workspace'])">
                 <div class="module-title">Module 5: Core Services</div>
-                <div class="module-desc">Meet, Drive, Chat, Calendar, AppSheet</div>
+                <div class="module-desc">Drive, Calendar, Meet, Chat, AppSheet</div>
+            </div>
+            <div class="module-card" onclick="startQuiz('practice', ['chrome','mobile'])">
+                <div class="module-title">Module 6: Endpoint Management</div>
+                <div class="module-desc">Chrome Policies, Mobile Device Management</div>
             </div>
         </div>
     </div>
@@ -404,7 +408,8 @@
         if (category === 'all') {
             currentQuestions = [...questions];
         } else {
-            currentQuestions = questions.filter(q => q.category === category);
+            const cats = Array.isArray(category) ? category : [category];
+            currentQuestions = questions.filter(q => cats.includes(q.category));
         }
 
         if (currentQuestions.length === 0) {
@@ -423,7 +428,9 @@
         // Setup UI
         showScreen('quiz-screen');
 
-        const categoryName = CATEGORY_LABELS[category] || category.toUpperCase();
+        const categoryName = Array.isArray(category)
+            ? (CATEGORY_LABELS[category[0]] || category[0].toUpperCase())
+            : (CATEGORY_LABELS[category] || category.toUpperCase());
         
         const badge = document.getElementById('mode-badge');
         badge.innerText = mode === 'exam' ? 'EXAM SIMULATION' : `${categoryName}`;
