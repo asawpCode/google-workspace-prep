@@ -134,7 +134,55 @@
         .locked { pointer-events: none; }
         .text-success { color: var(--success); }
         .text-error { color: var(--error); }
-        
+
+        /* QUESTION BANK */
+        .qbank-controls {
+            display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
+        }
+        .qbank-search {
+            flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid var(--border);
+            border-radius: 4px; font-size: 14px; font-family: 'Roboto', sans-serif;
+            outline: none;
+        }
+        .qbank-search:focus { border-color: var(--primary); }
+        .qbank-filter {
+            padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px;
+            font-size: 14px; font-family: 'Roboto', sans-serif; background: white; cursor: pointer;
+        }
+        .qbank-count { font-size: 13px; color: var(--text-secondary); align-self: center; }
+
+        .qbank-item {
+            border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .qbank-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; background: #f8f9fa; border-bottom: 1px solid var(--border);
+            cursor: pointer; user-select: none;
+        }
+        .qbank-header:hover { background: #f1f3f4; }
+        .qbank-num { font-weight: 500; font-size: 13px; color: var(--text-secondary); }
+        .qbank-cat { font-size: 11px; font-weight: 700; text-transform: uppercase;
+            padding: 2px 8px; border-radius: 4px; background: #e8f0fe; color: var(--primary); }
+        .qbank-q { padding: 14px 16px 10px; font-size: 14px; line-height: 1.5; }
+        .qbank-options { padding: 0 16px 14px; }
+        .qbank-opt {
+            display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px;
+            border-radius: 6px; margin-bottom: 6px; font-size: 14px; line-height: 1.4;
+        }
+        .qbank-opt.correct-opt {
+            background: #e6f4ea; color: var(--success); font-weight: 500;
+        }
+        .qbank-opt-letter { font-weight: 700; min-width: 18px; }
+        .qbank-explanation {
+            padding: 10px 16px 14px; font-size: 13px; color: var(--text-secondary);
+            border-top: 1px solid var(--border); background: #fafafa; font-style: italic;
+        }
+        .qbank-chevron { font-size: 18px; color: var(--text-secondary); transition: transform 0.2s; }
+        .qbank-item.expanded .qbank-chevron { transform: rotate(180deg); }
+        .qbank-body { display: none; }
+        .qbank-item.expanded .qbank-body { display: block; }
+
     </style>
 </head>
 <body>
@@ -156,6 +204,10 @@
             <button class="btn-primary" style="flex:1; min-width: 200px;" onclick="startQuiz('exam', 'all')">
                 <div style="font-size:16px; margin-bottom:4px;">Full Exam Simulator</div>
                 <div style="font-weight:400; font-size:12px; opacity:0.9;">50 Questions • No feedback</div>
+            </button>
+            <button class="btn-outline" style="min-width: 180px;" onclick="openQuestionBank()">
+                <div style="font-size:16px; margin-bottom:4px;">Question Bank</div>
+                <div style="font-size:12px; color:#5f6368;">Browse all Q&amp;A</div>
             </button>
         </div>
 
@@ -213,6 +265,36 @@
         </div>
     </div>
 
+    <div id="qbank-screen" class="hidden">
+        <div class="card" style="margin-bottom: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h1 style="margin:0;">Question Bank</h1>
+                <button class="btn-outline" onclick="goHome()" style="padding:6px 14px; font-size:13px;">← Back</button>
+            </div>
+            <div class="qbank-controls">
+                <input type="text" class="qbank-search" id="qbank-search" placeholder="Search questions..." oninput="filterBank()">
+                <select class="qbank-filter" id="qbank-cat-filter" onchange="filterBank()">
+                    <option value="all">All Categories</option>
+                    <option value="directory">User & Resource Mgmt</option>
+                    <option value="security">Security & Compliance</option>
+                    <option value="gmail">Gmail & Email</option>
+                    <option value="vault">Google Vault</option>
+                    <option value="drive">Drive</option>
+                    <option value="calendar">Calendar</option>
+                    <option value="chrome">Chrome</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="meet">Meet</option>
+                    <option value="chat">Chat</option>
+                    <option value="migration">Migration</option>
+                    <option value="workspace">Workspace Services</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <span class="qbank-count" id="qbank-count"></span>
+            </div>
+        </div>
+        <div id="qbank-list"></div>
+    </div>
+
     <div id="results-screen" class="card hidden" style="text-align: center;">
         <div style="font-size: 48px; font-weight: 300; color: var(--primary);" id="final-score">0%</div>
         <h2>Session Complete</h2>
@@ -222,16 +304,78 @@
 
 </div>
 
+<script src="questions.js"></script>
 <script>
-    // ==========================================
-    // DATA: ALL QUESTIONS
-    // ==========================================
-    const questions = [];
+    // questions[] loaded from questions.js
 
     // --- HELPERS ---
-    const SCREENS = ['home-screen', 'quiz-screen', 'results-screen'];
+    const SCREENS = ['home-screen', 'quiz-screen', 'results-screen', 'qbank-screen'];
     function showScreen(id) {
         SCREENS.forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id));
+    }
+
+    // --- QUESTION BANK ---
+    const CAT_LABELS = {
+        directory: 'User & Resource Mgmt', security: 'Security & Compliance',
+        gmail: 'Gmail & Email', vault: 'Google Vault', drive: 'Drive',
+        calendar: 'Calendar', chrome: 'Chrome', mobile: 'Mobile',
+        meet: 'Meet', chat: 'Chat', migration: 'Migration',
+        workspace: 'Workspace Services', admin: 'Admin'
+    };
+    const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+
+    function openQuestionBank() {
+        showScreen('qbank-screen');
+        document.getElementById('qbank-search').value = '';
+        document.getElementById('qbank-cat-filter').value = 'all';
+        renderBank(questions);
+    }
+
+    function filterBank() {
+        const search = document.getElementById('qbank-search').value.toLowerCase();
+        const cat = document.getElementById('qbank-cat-filter').value;
+        const filtered = questions.filter(q => {
+            const matchCat = cat === 'all' || q.category === cat;
+            const matchSearch = !search || q.text.toLowerCase().includes(search) ||
+                q.options.some(o => o.toLowerCase().includes(search));
+            return matchCat && matchSearch;
+        });
+        renderBank(filtered);
+    }
+
+    function renderBank(qs) {
+        const list = document.getElementById('qbank-list');
+        document.getElementById('qbank-count').textContent = `${qs.length} question${qs.length !== 1 ? 's' : ''}`;
+        list.innerHTML = '';
+        qs.forEach((q, i) => {
+            const correctIdxArr = Array.isArray(q.correctIndex) ? q.correctIndex : [q.correctIndex];
+            const optsHtml = q.options.map((opt, idx) => {
+                const isCorrect = correctIdxArr.includes(idx);
+                return `<div class="qbank-opt${isCorrect ? ' correct-opt' : ''}">
+                    <span class="qbank-opt-letter">${LETTERS[idx]}.</span>
+                    <span>${opt}</span>
+                    ${isCorrect ? ' <span style="margin-left:auto; font-size:12px;">✓</span>' : ''}
+                </div>`;
+            }).join('');
+
+            const item = document.createElement('div');
+            item.className = 'qbank-item';
+            item.innerHTML = `
+                <div class="qbank-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <span class="qbank-num">#${q.id}</span>
+                        <span class="qbank-cat">${CAT_LABELS[q.category] || q.category}</span>
+                        <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${q.text.substring(0, 80)}${q.text.length > 80 ? '…' : ''}</span>
+                    </div>
+                    <span class="qbank-chevron">▾</span>
+                </div>
+                <div class="qbank-body">
+                    <div class="qbank-q">${q.text}</div>
+                    <div class="qbank-options">${optsHtml}</div>
+                    ${q.explanation ? `<div class="qbank-explanation">${q.explanation}</div>` : ''}
+                </div>`;
+            list.appendChild(item);
+        });
     }
 
     const CATEGORY_LABELS = {
